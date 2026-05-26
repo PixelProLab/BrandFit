@@ -94,6 +94,12 @@ test("about page links back to the software workspace", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: /Back to BrandFit by Pixel Pro Lab software/ }),
   ).toHaveAttribute("href", "/");
+  await expect(
+    page.getByRole("link", { name: "View BrandFit by Pixel Pro Lab on GitHub" }),
+  ).toHaveAttribute("href", "https://github.com/PixelProLab/BrandFit");
+  await expect(
+    page.getByRole("link", { name: "Visit Pixel Pro Lab on LinkedIn" }),
+  ).toHaveAttribute("href", "https://www.linkedin.com/company/pixelprolab/");
 });
 
 const createPngFixtures = async (page: import("@playwright/test").Page) => {
