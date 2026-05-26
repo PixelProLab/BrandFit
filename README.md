@@ -6,6 +6,12 @@ BrandFit is a privacy-first, browser-native tool for standardizing logos, icons,
 
 Built and maintained by [Pixel Pro Lab](https://github.com/PixelProLab). BrandFit is proudly open source. View the code on [GitHub](https://github.com/PixelProLab/BrandFit).
 
+## Live Demo
+
+Test BrandFit in the browser at [https://brandfit-design.netlify.app/](https://brandfit-design.netlify.app/).
+
+No install or download is required to evaluate the app. The hosted version still processes logos locally in the browser; files are not uploaded to a server.
+
 ## The Problem
 
 Creating a uniform grid from diverse logos is a persistent design challenge. A square icon, a wide wordmark, and a complex emblem can all share the same mathematical dimensions but appear visually disproportionate when placed side-by-side.
