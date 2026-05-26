@@ -9,7 +9,6 @@ import {
 } from "@/lib/canvas-processing";
 import { BrandFitDropzone } from "@/components/ui/brandfit-dropzone";
 import { LogoPreviewGrid } from "@/components/ui/logo-preview-grid";
-import { OpticalGridControls } from "@/components/ui/optical-grid-controls";
 import { OutputGridPreview } from "@/components/ui/output-grid-preview";
 import { SettingsPanel } from "@/components/ui/settings-panel";
 import {
@@ -180,10 +179,6 @@ export default function Home() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
           <div className="flex flex-col gap-6">
-            <OpticalGridControls
-              outputSize={state.settings.outputSize}
-              onOutputSizeChange={updateSettings}
-            />
             <OutputGridPreview
               jobs={completedJobs}
               outputUrls={outputUrls}
@@ -199,6 +194,11 @@ export default function Home() {
             />
           </div>
           <div className="lg:sticky lg:top-5 lg:self-start">
+            {exportMessage ? (
+              <p className="mb-4 rounded-md border border-brand-pink/30 bg-brand-pink/10 p-3 text-sm text-brand-text-main shadow-brand-pink">
+                {exportMessage}
+              </p>
+            ) : null}
             <SettingsPanel
               settings={state.settings}
               isProcessing={isProcessing}
@@ -210,11 +210,6 @@ export default function Home() {
               onExport={exportZip}
               onReset={resetWorkspace}
             />
-            {exportMessage ? (
-              <p className="mt-4 rounded-md border border-brand-pink/30 bg-brand-pink/10 p-3 text-sm text-brand-text-main shadow-brand-pink">
-                {exportMessage}
-              </p>
-            ) : null}
           </div>
         </div>
 

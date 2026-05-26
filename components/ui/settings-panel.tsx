@@ -46,30 +46,11 @@ export function SettingsPanel({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold text-brand-text-main">Output controls</h2>
-          <p className="mt-1 text-xs text-brand-text-muted">Tune, reprocess, and export the local output set.</p>
+          <p className="mt-1 text-xs text-brand-text-muted">Tune logos first, then export the local output set.</p>
         </div>
         <span className="rounded bg-brand-purple/20 px-2 py-1 text-xs font-medium text-brand-text-main">
           {completedCount} ready
         </span>
-      </div>
-
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          onClick={onExport}
-          disabled={completedCount === 0 || isProcessing}
-          className="h-10 rounded-md bg-brand-purple text-xs font-bold text-brand-text-main transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-brand-text-muted"
-        >
-          Export ZIP
-        </button>
-        <button
-          type="button"
-          onClick={onReprocess}
-          disabled={completedCount === 0 || isProcessing}
-          className="h-10 rounded-md border border-brand-purple/25 text-xs font-semibold text-brand-text-main transition hover:border-brand-pink disabled:cursor-not-allowed disabled:text-zinc-700"
-        >
-          Reprocess
-        </button>
       </div>
 
       <section aria-label="Selected logo controls" className="mt-4 rounded border border-brand-orange/30 bg-black p-3">
@@ -125,7 +106,7 @@ export function SettingsPanel({
 
       <div className="mt-4 grid grid-cols-[1fr_1.15fr] gap-3">
         <label className="block text-xs font-medium text-brand-text-main">
-          Square size
+          Define Export Square Size
           <select
             value={settings.outputSize}
             onChange={(event) => onSettingsChange({ outputSize: Number(event.target.value) })}
@@ -135,6 +116,9 @@ export function SettingsPanel({
             <option value={512}>512 px</option>
             <option value={1024}>1024 px</option>
           </select>
+          <span className="mt-2 block text-[11px] font-normal leading-4 text-brand-text-muted">
+            Controls every logo output at once.
+          </span>
         </label>
 
         <label className="block text-xs font-medium text-brand-text-main">
@@ -199,6 +183,25 @@ export function SettingsPanel({
       >
         Clear workspace
       </button>
+
+      <div className="mt-4 grid grid-cols-2 gap-2 border-t border-brand-purple/20 pt-4">
+        <button
+          type="button"
+          onClick={onExport}
+          disabled={completedCount === 0 || isProcessing}
+          className="h-10 rounded-md bg-brand-purple text-xs font-bold text-brand-text-main transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-brand-text-muted"
+        >
+          Export ZIP
+        </button>
+        <button
+          type="button"
+          onClick={onReprocess}
+          disabled={completedCount === 0 || isProcessing}
+          className="h-10 rounded-md border border-brand-purple/25 text-xs font-semibold text-brand-text-main transition hover:border-brand-pink disabled:cursor-not-allowed disabled:text-zinc-700"
+        >
+          Reprocess
+        </button>
+      </div>
     </aside>
   );
 }
