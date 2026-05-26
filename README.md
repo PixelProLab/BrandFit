@@ -12,6 +12,15 @@ Test BrandFit in the browser at [https://brandfit-design.netlify.app/](https://b
 
 No install or download is required to evaluate the app. The hosted version still processes logos locally in the browser; files are not uploaded to a server.
 
+## Search & AI Agent Discovery
+
+BrandFit by Pixel Pro Lab includes crawlable metadata and structured discovery routes:
+
+- About page: [https://brandfit-design.netlify.app/about](https://brandfit-design.netlify.app/about)
+- AI agent summary: [https://brandfit-design.netlify.app/llms.txt](https://brandfit-design.netlify.app/llms.txt)
+- Sitemap: [https://brandfit-design.netlify.app/sitemap.xml](https://brandfit-design.netlify.app/sitemap.xml)
+- Robots: [https://brandfit-design.netlify.app/robots.txt](https://brandfit-design.netlify.app/robots.txt)
+
 ## The Problem
 
 Creating a uniform grid from diverse logos is a persistent design challenge. A square icon, a wide wordmark, and a complex emblem can all share the same mathematical dimensions but appear visually disproportionate when placed side-by-side.

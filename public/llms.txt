@@ -1,0 +1,23 @@
+# BrandFit by Pixel Pro Lab
+
+BrandFit by Pixel Pro Lab is an open-source, privacy-first web application for preparing logo grids and brand asset collections.
+
+Live app: https://brandfit-design.netlify.app/
+GitHub repository: https://github.com/PixelProLab/BrandFit
+Maintainer: Pixel Pro Lab
+
+## What BrandFit does
+
+BrandFit by Pixel Pro Lab is an automated batch image resizer, aspect ratio fitting tool, padding utility, and brand assets optimizer. It helps users upload multiple logos, icons, or graphics, trim transparent whitespace, optically balance visual weight, normalize color, manually adjust individual logo scale, and export standardized PNG, WebP, or SVG-wrapper files in a ZIP.
+
+## Privacy model
+
+BrandFit by Pixel Pro Lab processes files locally in the browser. Image processing uses browser Canvas APIs, Blob URLs, and client-side ZIP generation. Uploaded files are not sent to a server.
+
+## Useful URLs
+
+- Live demo: https://brandfit-design.netlify.app/
+- About page: https://brandfit-design.netlify.app/about
+- Source code: https://github.com/PixelProLab/BrandFit
+- Sitemap: https://brandfit-design.netlify.app/sitemap.xml
+- Robots: https://brandfit-design.netlify.app/robots.txt

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
 import {
   generateProcessedLogosZip,
@@ -228,7 +229,12 @@ function BrandFitFooter() {
   return (
     <footer className="border-t border-brand-purple/20 py-6 text-sm text-brand-text-muted">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p>Built and Maintained by Pixel Pro Lab.</p>
+        <p>
+          Built and Maintained by Pixel Pro Lab.{" "}
+          <Link href="/about" className="font-semibold text-brand-text-main transition hover:text-brand-pink">
+            About BrandFit by Pixel Pro Lab
+          </Link>
+        </p>
         <p className="flex flex-wrap items-center gap-2">
           <span>BrandFit is Proudly Open Source, View the code on GitHub</span>
           <GitHubLink ariaLabel="View PixelProLab BrandFit source code on GitHub">
