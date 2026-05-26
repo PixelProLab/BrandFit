@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BrandFitFooter } from "@/components/ui/brandfit-footer";
 
 const repositoryUrl = "https://github.com/PixelProLab/BrandFit";
-const liveAppUrl = "https://brandfit-design.netlify.app/";
 const linkedInUrl = "https://www.linkedin.com/company/pixelprolab/";
 
 export const metadata: Metadata = {
@@ -18,6 +18,37 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-brand-bg text-brand-text-main">
       <section className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+        <nav className="flex flex-wrap items-center justify-between gap-3" aria-label="BrandFit resources">
+          <Link
+            href="/"
+            className="inline-flex h-9 items-center rounded-md bg-brand-purple px-3 text-sm font-bold text-brand-text-main transition hover:bg-brand-pink"
+          >
+            ← Back to app
+          </Link>
+          <span className="flex items-center gap-2">
+            <a
+              href={repositoryUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="View BrandFit by Pixel Pro Lab on GitHub"
+              title="View BrandFit by Pixel Pro Lab on GitHub"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-brand-purple/30 text-brand-text-main transition hover:border-brand-pink hover:text-brand-pink"
+            >
+              <GitHubIcon />
+            </a>
+            <a
+              href={linkedInUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Visit Pixel Pro Lab on LinkedIn"
+              title="Visit Pixel Pro Lab on LinkedIn"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-brand-purple/30 text-brand-text-main transition hover:border-brand-pink hover:text-brand-pink"
+            >
+              <LinkedInIcon />
+            </a>
+          </span>
+        </nav>
+
         <header className="border-b border-brand-purple/25 pb-8">
           <p className="text-xs font-semibold uppercase text-brand-orange">
             About Pixel Pro Lab
@@ -77,44 +108,10 @@ export default function AboutPage() {
             </p>
           </div>
         </section>
-
-        <nav className="flex flex-wrap items-center gap-3" aria-label="BrandFit resources">
-          <Link
-            href="/"
-            className="rounded-md bg-brand-purple px-4 py-3 text-sm font-bold text-brand-text-main transition hover:bg-brand-pink"
-          >
-            ← Back to BrandFit by Pixel Pro Lab software
-          </Link>
-          <a
-            href={repositoryUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="View BrandFit by Pixel Pro Lab on GitHub"
-            title="View BrandFit by Pixel Pro Lab on GitHub"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-brand-purple/30 text-brand-text-main transition hover:border-brand-pink hover:text-brand-pink"
-          >
-            <GitHubIcon />
-          </a>
-          <a
-            href={linkedInUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Visit Pixel Pro Lab on LinkedIn"
-            title="Visit Pixel Pro Lab on LinkedIn"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-brand-purple/30 text-brand-text-main transition hover:border-brand-pink hover:text-brand-pink"
-          >
-            <LinkedInIcon />
-          </a>
-          <a
-            href={liveAppUrl}
-            aria-label="Open the live BrandFit by Pixel Pro Lab app"
-            title="Open the live BrandFit by Pixel Pro Lab app"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-brand-orange/40 text-brand-orange transition hover:bg-brand-orange hover:text-black"
-          >
-            <ExternalLinkIcon />
-          </a>
-        </nav>
       </section>
+      <div className="mx-auto w-full max-w-7xl px-4 pb-5 sm:px-6 lg:px-8">
+        <BrandFitFooter />
+      </div>
     </main>
   );
 }
@@ -131,16 +128,6 @@ function LinkedInIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
       <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM.33 8h4.34v15H.33V8Zm7.17 0h4.16v2.05h.06c.58-1.1 2-2.26 4.12-2.26 4.41 0 5.23 2.9 5.23 6.68V23h-4.34v-7.56c0-1.8-.03-4.12-2.51-4.12-2.52 0-2.9 1.96-2.9 3.99V23H7.5V8Z" />
-    </svg>
-  );
-}
-
-function ExternalLinkIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M7 17 17 7" />
-      <path d="M9 7h8v8" />
-      <path d="M5 5v14h14" />
     </svg>
   );
 }

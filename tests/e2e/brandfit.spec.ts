@@ -92,7 +92,7 @@ test("keeps the workspace usable on mobile width", async ({ page }) => {
 test("about page links back to the software workspace", async ({ page }) => {
   await page.goto("/about");
   await expect(
-    page.getByRole("link", { name: /Back to BrandFit by Pixel Pro Lab software/ }),
+    page.getByRole("link", { name: "Back to app" }),
   ).toHaveAttribute("href", "/");
   await expect(
     page.getByRole("link", { name: "View BrandFit by Pixel Pro Lab on GitHub" }),
@@ -100,6 +100,8 @@ test("about page links back to the software workspace", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "Visit Pixel Pro Lab on LinkedIn" }),
   ).toHaveAttribute("href", "https://www.linkedin.com/company/pixelprolab/");
+  await expect(page.getByText("Built and Maintained by")).toBeVisible();
+  await expect(page.getByText("Support open source")).toBeVisible();
 });
 
 const createPngFixtures = async (page: import("@playwright/test").Page) => {
