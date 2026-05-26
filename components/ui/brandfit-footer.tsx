@@ -1,31 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import type { ReactNode } from "react";
 
 export function BrandFitFooter() {
   return (
     <footer className="border-t border-brand-purple/20 py-6 text-sm text-brand-text-muted">
       <div className="grid gap-5 lg:grid-cols-[minmax(260px,1fr)_minmax(360px,440px)_220px] lg:items-stretch">
-        <div>
-          <p>
+        <div className="flex min-h-[122px] items-center">
+          <p className="text-lg font-semibold leading-7 text-brand-text-main">
             Built and Maintained by{" "}
             <a
               href="https://pixelprotocol.co"
               target="_blank"
               rel="noreferrer"
-              className="font-semibold text-brand-text-main transition hover:text-brand-pink"
+              className="text-brand-text-main underline decoration-brand-purple/50 underline-offset-4 transition hover:text-brand-pink"
             >
               Pixel Pro Lab
             </a>
             .
           </p>
-          <Link
-            href="/about"
-            className="mt-5 inline-flex font-semibold text-brand-text-main transition hover:text-brand-pink"
-          >
-            About BrandFit by Pixel Pro Lab
-          </Link>
         </div>
 
         <div className="flex min-h-[122px] rounded-md border border-brand-purple/25 bg-brand-surface px-4 py-3 shadow-brand-purple">
