@@ -114,7 +114,7 @@ export function BrandFitDropzone({ onFilesAccepted }: BrandFitDropzoneProps) {
                 Processing terminal
               </p>
               <p className="mt-2 max-w-md text-sm leading-6 text-brand-text-muted">
-                Privacy-first sponsor logo fitting for balanced partner grids.
+                Optically balance your logo grids for perfectly uniform visual layouts.
               </p>
             </div>
           </div>

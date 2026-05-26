@@ -16,7 +16,7 @@ test("processes logos locally and exports a zip", async ({ page }) => {
 
   await page.goto("/");
   await expect(page.getByAltText("BrandFit by Pixel Pro Lab logo")).toBeVisible();
-  await expect(page.getByText("Privacy-first sponsor logo fitting")).toBeVisible();
+  await expect(page.getByText("Optically balance your logo grids")).toBeVisible();
   await expect(page.getByTestId("file-input")).toHaveAttribute("data-ready", "true");
 
   const files = await createPngFixtures(page);
@@ -28,7 +28,7 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
   await expect(page.getByRole("heading", { name: "Final output grid" })).toBeVisible();
   await expect(page.getByLabel("Selected logo controls").getByText("fixture-1.png")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Export 512px ZIP" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Export ZIP" })).toBeVisible();
 
   await page.getByLabel("Selected logo controls").getByRole("button", { name: "Bigger" }).click();
   await expect(page.getByText(/Manual scale updated/)).toBeVisible();
@@ -40,7 +40,7 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
 
   const downloadPromise = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Export 512px ZIP" }).click();
+  await page.getByRole("button", { name: "Export ZIP" }).click();
   const download = await downloadPromise;
   const buffer = await download.createReadStream().then(
     (stream) =>

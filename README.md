@@ -1,14 +1,16 @@
 # BrandFit
 
-An open-source, browser-native tool for standardizing logo grids and optically balancing brand assets.
+Optically balance your logo grids for perfectly uniform visual layouts.
 
-Built and maintained by [Pixel Pro Lab](https://github.com/PixelProLab).
+BrandFit is a privacy-first, browser-native tool for standardizing logos, icons, and graphics before they enter sponsor grids, partner walls, government portals, event sites, and corporate web layouts.
+
+Built and maintained by [Pixel Pro Lab](https://github.com/PixelProLab). BrandFit is proudly open source. View the code on [GitHub](https://github.com/PixelProLab/BrandFit).
 
 ## The Problem
 
 Creating a uniform grid from diverse logos is a persistent design challenge. A square icon, a wide wordmark, and a complex emblem can all share the same mathematical dimensions but appear visually disproportionate when placed side-by-side.
 
-BrandFit is a utility built to automate this alignment. It processes raw logo files to ensure they are trimmed, optically balanced, consistently padded, and ready to export as a unified, visually stable grid.
+BrandFit automates this alignment. It processes raw logo files so they are trimmed, optically balanced, consistently padded, manually adjustable, and ready to export as a unified, visually stable grid.
 
 ## The Privacy Model: Zero-Server Processing
 
@@ -26,7 +28,8 @@ This zero-server architecture makes BrandFit safe for processing unreleased asse
 2. **Clean:** Transparent whitespace is automatically trimmed using the HTML Canvas API.
 3. **Balance:** The system calculates visual weight (pixel density vs. visible bounds) and applies optical volume balancing so dense marks do not overpower lighter text.
 4. **Normalize:** Standardize outputs to original colors, pure black, pure white, or grayscale.
-5. **Export:** Download the standardized SVG or WebP assets instantly as a single `.zip` file.
+5. **Review:** Select any logo in the final grid and manually scale it smaller or larger while keeping the current preview visible during reprocessing.
+6. **Export:** Download standardized PNG, WebP, or SVG-wrapper assets instantly as a single `.zip` file.
 
 ## Architecture & Contribution
 
@@ -41,16 +44,26 @@ BrandFit is structured so developers can contribute to specific modules without 
 Install dependencies:
 
 ```bash
-npm install 
+npm install
 ```
 
-## Run the development server:
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Run checks:
+
 ```bash
 npm run lint
+npm run typecheck
+npm run test
 npm run build
 ```
-## Run checks:
-```Bash
-npm run lint
-npm run build
+
+Run the full verification suite:
+
+```bash
+npm run verify
 ```

@@ -149,7 +149,6 @@ export const logoWorkspaceReducer = (
               ...job,
               manualScale,
               status: "queued" as const,
-              processedLogo: null,
               error: null,
             }
           : job,

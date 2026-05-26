@@ -108,9 +108,9 @@ describe("logo workspace reducer", () => {
     expect(scaled.jobs[0]).toMatchObject({
       manualScale: 1.24,
       status: "queued",
-      processedLogo: null,
+      processedLogo: complete.jobs[0].processedLogo,
       error: null,
     });
-    expect(scaled.logos).toHaveLength(0);
+    expect(scaled.logos).toEqual([complete.jobs[0].processedLogo]);
   });
 });
