@@ -9,8 +9,8 @@ import {
 } from "@/lib/canvas-processing";
 import { BrandFitDropzone } from "@/components/ui/brandfit-dropzone";
 import { LogoPreviewGrid } from "@/components/ui/logo-preview-grid";
+import { OpticalGridControls } from "@/components/ui/optical-grid-controls";
 import { OutputGridPreview } from "@/components/ui/output-grid-preview";
-import { PrivacyChecklist } from "@/components/ui/privacy-checklist";
 import { SettingsPanel } from "@/components/ui/settings-panel";
 import {
   createInitialLogoWorkspaceState,
@@ -180,7 +180,10 @@ export default function Home() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
           <div className="flex flex-col gap-6">
-            <PrivacyChecklist />
+            <OpticalGridControls
+              outputSize={state.settings.outputSize}
+              onOutputSizeChange={updateSettings}
+            />
             <OutputGridPreview
               jobs={completedJobs}
               outputUrls={outputUrls}
@@ -228,19 +231,44 @@ const revokeObjectUrlSoon = (url: string): void => {
 function BrandFitFooter() {
   return (
     <footer className="border-t border-brand-purple/20 py-6 text-sm text-brand-text-muted">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p>
-          Built and Maintained by Pixel Pro Lab.{" "}
-          <Link href="/about" className="font-semibold text-brand-text-main transition hover:text-brand-pink">
-            About BrandFit by Pixel Pro Lab
-          </Link>
-        </p>
-        <p className="flex flex-wrap items-center gap-2">
-          <span>BrandFit is Proudly Open Source, View the code on GitHub</span>
-          <GitHubLink ariaLabel="View PixelProLab BrandFit source code on GitHub">
-            <GitHubIcon />
-          </GitHubLink>
-        </p>
+      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <p>
+              Built and Maintained by{" "}
+              <a
+                href="https://pixelprotocol.co"
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-brand-text-main transition hover:text-brand-pink"
+              >
+                Pixel Pro Lab
+              </a>
+              .
+            </p>
+            <Link href="/about" className="font-semibold text-brand-text-main transition hover:text-brand-pink">
+              About BrandFit by Pixel Pro Lab
+            </Link>
+          </div>
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span>BrandFit by Pixel Pro Lab is Proudly Open Source, View the code on GitHub</span>
+            <GitHubLink ariaLabel="View PixelProLab BrandFit source code on GitHub">
+              <GitHubIcon />
+            </GitHubLink>
+          </p>
+        </div>
+
+        <div className="rounded-md border border-brand-orange/35 bg-brand-surface p-4">
+          <p className="text-xs font-semibold uppercase text-brand-orange">Support open source</p>
+          <button
+            type="button"
+            disabled
+            className="mt-2 h-10 rounded-md border border-brand-orange/45 px-4 text-sm font-bold text-brand-orange opacity-70"
+            aria-label="Buy me a coffee donation button coming soon"
+          >
+            Buy me a coffee
+          </button>
+        </div>
       </div>
     </footer>
   );

@@ -22,7 +22,7 @@ export function LogoPreviewGrid({
       <section className="rounded-md border border-brand-purple/20 bg-brand-surface p-8 text-center shadow-brand-purple">
         <h2 className="text-xl font-semibold text-brand-text-main">No logos queued yet</h2>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-brand-text-muted">
-          Upload a mixed set of marks, wordmarks, and emblems to review how BrandFit
+          Upload a mixed set of marks, wordmarks, and emblems to review how BrandFit by Pixel Pro Lab
           trims whitespace and applies optical balance inside a consistent square.
         </p>
       </section>
@@ -62,7 +62,7 @@ export function LogoPreviewGrid({
                 aria-label={`Select ${job.file.name} for live editing`}
               >
                 <PreviewSlot label="Original" src={job.previewUrl} />
-                <PreviewSlot label="BrandFit output" src={outputUrl} />
+                <PreviewSlot label="BrandFit by Pixel Pro Lab output" src={outputUrl} />
               </button>
               <div className="p-4">
                 <div className="flex items-start justify-between gap-3">

@@ -96,7 +96,7 @@ export default function AboutPage() {
             href={liveAppUrl}
             className="rounded-md border border-brand-orange/40 px-4 py-3 text-sm font-bold text-brand-orange transition hover:bg-brand-orange hover:text-black"
           >
-            Test the live BrandFit app
+            Test the live BrandFit by Pixel Pro Lab app
           </a>
         </nav>
       </section>

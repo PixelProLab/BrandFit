@@ -60,7 +60,7 @@ export function OutputGridPreview({
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={outputUrl}
-                    alt={`${job.file.name} final BrandFit output`}
+                    alt={`${job.file.name} final BrandFit by Pixel Pro Lab output`}
                     className="max-h-full max-w-full object-contain"
                   />
                 ) : (
