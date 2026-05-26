@@ -82,7 +82,7 @@ export default function AboutPage() {
             href="/"
             className="rounded-md bg-brand-purple px-4 py-3 text-sm font-bold text-brand-text-main transition hover:bg-brand-pink"
           >
-            Open BrandFit by Pixel Pro Lab
+            ← Back to BrandFit by Pixel Pro Lab software
           </Link>
           <a
             href={repositoryUrl}

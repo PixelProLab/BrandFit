@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 
@@ -126,13 +127,18 @@ export function BrandFitDropzone({ onFilesAccepted }: BrandFitDropzoneProps) {
           <p className="max-w-sm text-sm leading-6 text-brand-text-muted lg:text-right">
             Optically balance your logo grids for perfectly uniform visual layouts with BrandFit by Pixel Pro Lab.
           </p>
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="h-11 rounded-md bg-brand-purple px-5 text-sm font-bold text-brand-text-main shadow-brand-purple transition hover:bg-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink focus:ring-offset-2 focus:ring-offset-brand-bg"
+          <Link
+            href="/about"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-brand-purple/35 px-4 text-sm font-bold text-brand-text-main shadow-brand-purple transition hover:border-brand-pink hover:text-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink focus:ring-offset-2 focus:ring-offset-brand-bg"
           >
-            Select logos
-          </button>
+            <span
+              aria-hidden="true"
+              className="flex h-6 w-6 items-center justify-center rounded-full border border-brand-orange/50 text-xs text-brand-orange"
+            >
+              i
+            </span>
+            About BrandFit by Pixel Pro Lab
+          </Link>
         </div>
       </div>
       <div className="relative z-10 mt-3 grid gap-2 text-xs text-brand-text-muted md:grid-cols-3">

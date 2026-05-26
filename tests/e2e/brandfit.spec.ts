@@ -21,11 +21,12 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   await expect(page.getByText("Define Export Square Size")).toBeVisible();
   await expect(page.getByText("Controls every logo output at once.")).toBeVisible();
   await expect(page.getByTestId("file-input")).toHaveAttribute("data-ready", "true");
+  await expect(page.getByTestId("empty-file-input")).toHaveAttribute("data-ready", "true");
+  await expect(page.getByRole("button", { name: /Drop files here/ })).toBeVisible();
 
   const files = await createPngFixtures(page);
-  const input = page.getByTestId("file-input");
+  const input = page.getByTestId("empty-file-input");
   await input.setInputFiles(files);
-  await input.dispatchEvent("change");
 
   await expect(page.getByTestId("logo-card")).toHaveCount(2);
   await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
@@ -72,11 +73,21 @@ test("has no critical accessibility violations on the initial workspace", async 
 test("keeps the workspace usable on mobile width", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
-  await expect(page.getByRole("button", { name: "Select logos" })).toBeVisible();
+  await expect(
+    page.getByLabel("Logo upload").getByRole("link", { name: /About BrandFit by Pixel Pro Lab/ }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: /Drop files here/ })).toBeVisible();
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
   );
   expect(overflow).toBe(false);
+});
+
+test("about page links back to the software workspace", async ({ page }) => {
+  await page.goto("/about");
+  await expect(
+    page.getByRole("link", { name: /Back to BrandFit by Pixel Pro Lab software/ }),
+  ).toHaveAttribute("href", "/");
 });
 
 const createPngFixtures = async (page: import("@playwright/test").Page) => {

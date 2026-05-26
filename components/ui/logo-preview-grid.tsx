@@ -1,30 +1,139 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FormEvent } from "react";
 import type { LogoJob } from "@/store/logo-workspace-store";
 
 type LogoPreviewGridProps = {
   jobs: LogoJob[];
   outputUrls: Record<string, string>;
   selectedJobId: string | null;
+  onFilesAccepted: (files: File[]) => void;
   onSelect: (id: string) => void;
   onRemove: (id: string) => void;
 };
+
+const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
 
 export function LogoPreviewGrid({
   jobs,
   outputUrls,
   selectedJobId,
+  onFilesAccepted,
   onSelect,
   onRemove,
 }: LogoPreviewGridProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const acceptFiles = useCallback(
+    (fileList: FileList | File[]) => {
+      const files = Array.from(fileList);
+      const accepted = files.filter(isSupportedImage);
+      const rejected = files.length - accepted.length;
+
+      if (accepted.length > 0) {
+        onFilesAccepted(accepted);
+      }
+
+      if (rejected > 0) {
+        setMessage(`${rejected} file${rejected === 1 ? "" : "s"} skipped. Use an image under 20 MB.`);
+        return;
+      }
+
+      setMessage(accepted.length > 0 ? `${accepted.length} file${accepted.length === 1 ? "" : "s"} queued.` : null);
+    },
+    [onFilesAccepted],
+  );
+
+  const handleFileInput = useCallback(
+    (event: FormEvent<HTMLInputElement>) => {
+      if (event.currentTarget.files) {
+        acceptFiles(event.currentTarget.files);
+        event.currentTarget.value = "";
+      }
+    },
+    [acceptFiles],
+  );
+
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+
+    input.dataset.ready = "true";
+
+    const handleNativeChange = () => {
+      if (input.files) {
+        acceptFiles(input.files);
+        input.value = "";
+      }
+    };
+
+    input.addEventListener("change", handleNativeChange);
+    input.addEventListener("input", handleNativeChange);
+
+    return () => {
+      delete input.dataset.ready;
+      input.removeEventListener("change", handleNativeChange);
+      input.removeEventListener("input", handleNativeChange);
+    };
+  }, [acceptFiles]);
+
   if (jobs.length === 0) {
     return (
-      <section className="rounded-md border border-brand-purple/20 bg-brand-surface p-8 text-center shadow-brand-purple">
-        <h2 className="text-xl font-semibold text-brand-text-main">No logos queued yet</h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-brand-text-muted">
-          Upload a mixed set of marks, wordmarks, and emblems to review how BrandFit by Pixel Pro Lab
-          trims whitespace and applies optical balance inside a consistent square.
-        </p>
+      <section
+        aria-label="Empty logo upload queue"
+        className="rounded-md border border-brand-purple/20 bg-brand-surface p-4 shadow-brand-purple"
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          aria-label="Upload logo files from empty queue"
+          accept="image/*"
+          multiple
+          suppressHydrationWarning
+          className="sr-only"
+          data-testid="empty-file-input"
+          onInput={handleFileInput}
+        />
+        <button
+          type="button"
+          data-testid="empty-dropzone"
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(event) => {
+            event.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(event) => {
+            event.preventDefault();
+            setIsDragging(false);
+            acceptFiles(event.dataTransfer.files);
+          }}
+          className={`flex min-h-[320px] w-full flex-col items-center justify-center rounded-md border border-dashed bg-black/55 px-5 py-8 text-center transition focus:outline-none focus:ring-2 focus:ring-brand-pink focus:ring-offset-2 focus:ring-offset-brand-bg ${
+            isDragging
+              ? "border-brand-pink bg-brand-purple/20"
+              : "border-brand-purple/40 hover:border-brand-purple hover:bg-brand-purple/10"
+          }`}
+        >
+          <span
+            aria-hidden="true"
+            className="flex h-16 w-16 items-center justify-center rounded-md border border-brand-orange/45 bg-brand-orange/10 text-4xl font-light text-brand-orange"
+          >
+            +
+          </span>
+          <span className="mt-6 text-xs font-semibold uppercase tracking-normal text-brand-orange">
+            Local file upload
+          </span>
+          <span className="mt-2 text-2xl font-bold text-brand-text-main">Drop files here</span>
+          <span className="mt-2 text-sm text-brand-text-muted">or click to browse from your device</span>
+          <span className="mt-5 max-w-2xl text-sm leading-6 text-brand-text-muted">
+            Add logos, icons, or graphics to build a live output grid. BrandFit by Pixel Pro Lab will
+            trim whitespace, normalize padding, and process every asset locally in your browser.
+          </span>
+        </button>
+        {message ? <p className="mt-3 text-sm text-brand-orange">{message}</p> : null}
       </section>
     );
   }
@@ -146,3 +255,6 @@ const formatBytes = (bytes: number): string => {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 };
+
+const isSupportedImage = (file: File): boolean =>
+  file.type.startsWith("image/") && file.size > 0 && file.size <= MAX_FILE_SIZE_BYTES;

@@ -189,6 +189,7 @@ export default function Home() {
               jobs={state.jobs}
               outputUrls={outputUrls}
               selectedJobId={state.selectedJobId}
+              onFilesAccepted={queueFiles}
               onSelect={selectJob}
               onRemove={removeJob}
             />
