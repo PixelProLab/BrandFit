@@ -18,7 +18,7 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   await expect(page.getByAltText("BrandFit by Pixel Pro Lab visual mark")).toBeVisible();
   await expect(page.getByText("Optically balance your logo grids")).toBeVisible();
   await expect(page.getByRole("heading", { name: "BrandFit by Pixel Pro Lab" })).toBeVisible();
-  await expect(page.getByText("Define Export Square Size")).toBeVisible();
+  await expect(page.getByText("Export Square Size")).toBeVisible();
   await expect(page.getByText("Controls every logo output at once.")).toBeVisible();
   await expect(page.getByTestId("file-input")).toHaveAttribute("data-ready", "true");
   await expect(page.getByTestId("empty-file-input")).toHaveAttribute("data-ready", "true");

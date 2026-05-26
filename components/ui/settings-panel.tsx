@@ -104,25 +104,12 @@ export function SettingsPanel({
         </div>
       </section>
 
-      <div className="mt-4 grid grid-cols-[1fr_1.15fr] gap-3">
+      <div className="mt-4 grid gap-4">
         <label className="block text-xs font-medium text-brand-text-main">
-          Define Export Square Size
-          <select
-            value={settings.outputSize}
-            onChange={(event) => onSettingsChange({ outputSize: Number(event.target.value) })}
-            className="mt-2 h-9 w-full rounded border border-brand-purple/30 bg-black px-2 text-xs text-brand-text-main"
-          >
-            <option value={256}>256 px</option>
-            <option value={512}>512 px</option>
-            <option value={1024}>1024 px</option>
-          </select>
-          <span className="mt-2 block text-[11px] font-normal leading-4 text-brand-text-muted">
-            Controls every logo output at once.
+          <span className="flex items-center justify-between gap-3">
+            <span>Padding</span>
+            <span>{Math.round(settings.paddingRatio * 100)}%</span>
           </span>
-        </label>
-
-        <label className="block text-xs font-medium text-brand-text-main">
-          Padding: {Math.round(settings.paddingRatio * 100)}%
           <input
             type="range"
             min="0.08"
@@ -131,8 +118,26 @@ export function SettingsPanel({
             value={settings.paddingRatio}
             suppressHydrationWarning
             onChange={(event) => onSettingsChange({ paddingRatio: Number(event.target.value) })}
-            className="mt-4 w-full accent-brand-orange"
+            className="mt-2 w-full accent-brand-orange"
           />
+        </label>
+
+        <label className="block text-xs font-medium text-brand-text-main">
+          Export Square Size
+          <span className="mt-2 grid gap-2 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-center">
+            <select
+              value={settings.outputSize}
+              onChange={(event) => onSettingsChange({ outputSize: Number(event.target.value) })}
+              className="h-9 w-full rounded border border-brand-purple/30 bg-black px-2 text-xs text-brand-text-main"
+            >
+              <option value={256}>256 px</option>
+              <option value={512}>512 px</option>
+              <option value={1024}>1024 px</option>
+            </select>
+            <span className="text-[11px] font-normal leading-4 text-brand-text-muted">
+              Controls every logo output at once.
+            </span>
+          </span>
         </label>
       </div>
 
