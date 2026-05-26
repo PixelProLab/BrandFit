@@ -26,12 +26,18 @@ test("processes logos locally and exports a zip", async ({ page }) => {
 
   const files = await createPngFixtures(page);
   const input = page.getByTestId("empty-file-input");
-  await input.setInputFiles(files);
+  await input.setInputFiles(files[0]);
 
-  await expect(page.getByTestId("logo-card")).toHaveCount(2);
-  await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
+  await expect(page.getByTestId("logo-card")).toHaveCount(1);
+  await expect(page.getByText("complete")).toHaveCount(1, { timeout: 20_000 });
   await expect(page.getByRole("heading", { name: "Final output grid" })).toBeVisible();
   await expect(page.getByLabel("Selected logo controls").getByText("fixture-1.png")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Add logos" })).toBeVisible();
+  await expect(page.getByTestId("add-more-file-input")).toHaveAttribute("data-ready", "true");
+
+  await page.getByTestId("add-more-file-input").setInputFiles(files[1]);
+  await expect(page.getByTestId("logo-card")).toHaveCount(2);
+  await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
   await expect(page.getByRole("button", { name: "Export ZIP" })).toBeVisible();
 
   await page.getByLabel("Selected logo controls").getByRole("button", { name: "Bigger" }).click();

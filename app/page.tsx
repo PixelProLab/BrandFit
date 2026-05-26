@@ -183,6 +183,7 @@ export default function Home() {
               jobs={completedJobs}
               outputUrls={outputUrls}
               selectedJobId={state.selectedJobId}
+              onFilesAccepted={queueFiles}
               onSelect={selectJob}
             />
             <LogoPreviewGrid

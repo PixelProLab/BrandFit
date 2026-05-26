@@ -1,20 +1,82 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FormEvent } from "react";
 import type { LogoJob } from "@/store/logo-workspace-store";
 
 type OutputGridPreviewProps = {
   jobs: LogoJob[];
   outputUrls: Record<string, string>;
   selectedJobId: string | null;
+  onFilesAccepted: (files: File[]) => void;
   onSelect: (id: string) => void;
 };
+
+const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
 
 export function OutputGridPreview({
   jobs,
   outputUrls,
   selectedJobId,
+  onFilesAccepted,
   onSelect,
 }: OutputGridPreviewProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const acceptFiles = useCallback(
+    (fileList: FileList | File[]) => {
+      const files = Array.from(fileList);
+      const accepted = files.filter(isSupportedImage);
+      const rejected = files.length - accepted.length;
+
+      if (accepted.length > 0) {
+        onFilesAccepted(accepted);
+      }
+
+      if (rejected > 0) {
+        setMessage(`${rejected} file${rejected === 1 ? "" : "s"} skipped. Use an image under 20 MB.`);
+        return;
+      }
+
+      setMessage(accepted.length > 0 ? `${accepted.length} logo${accepted.length === 1 ? "" : "s"} added.` : null);
+    },
+    [onFilesAccepted],
+  );
+
+  const handleFileInput = useCallback(
+    (event: FormEvent<HTMLInputElement>) => {
+      if (event.currentTarget.files) {
+        acceptFiles(event.currentTarget.files);
+        event.currentTarget.value = "";
+      }
+    },
+    [acceptFiles],
+  );
+
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+
+    input.dataset.ready = "true";
+
+    const handleNativeChange = () => {
+      if (input.files) {
+        acceptFiles(input.files);
+        input.value = "";
+      }
+    };
+
+    input.addEventListener("change", handleNativeChange);
+    input.addEventListener("input", handleNativeChange);
+
+    return () => {
+      delete input.dataset.ready;
+      input.removeEventListener("change", handleNativeChange);
+      input.removeEventListener("input", handleNativeChange);
+    };
+  }, [acceptFiles, jobs.length]);
+
   if (jobs.length === 0) {
     return null;
   }
@@ -26,6 +88,18 @@ export function OutputGridPreview({
       aria-label="Final output grid preview"
       className="rounded-md border border-brand-purple/25 bg-brand-surface p-4 shadow-brand-purple"
     >
+      <input
+        ref={inputRef}
+        type="file"
+        aria-label="Add more logo files"
+        accept="image/*"
+        multiple
+        suppressHydrationWarning
+        className="sr-only"
+        data-testid="add-more-file-input"
+        onInput={handleFileInput}
+      />
+
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold text-brand-text-main">Final output grid</h2>
@@ -33,10 +107,20 @@ export function OutputGridPreview({
             Review the exact square assets as a grid before exporting the ZIP.
           </p>
         </div>
-        <span className="rounded border border-brand-orange/40 bg-brand-orange/10 px-2 py-1 text-xs font-semibold text-brand-orange">
-          {jobs.length} output{jobs.length === 1 ? "" : "s"}
-        </span>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="h-9 rounded-md border border-brand-purple/35 bg-black px-3 text-xs font-bold text-brand-text-main transition hover:border-brand-pink hover:text-brand-pink focus:outline-none focus:ring-2 focus:ring-brand-pink focus:ring-offset-2 focus:ring-offset-brand-bg"
+          >
+            Add logos
+          </button>
+          <span className="rounded border border-brand-orange/40 bg-brand-orange/10 px-2 py-1 text-xs font-semibold text-brand-orange">
+            {jobs.length} output{jobs.length === 1 ? "" : "s"}
+          </span>
+        </div>
       </div>
+      {message ? <p className="mt-3 text-sm text-brand-orange">{message}</p> : null}
 
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {jobs.map((job) => {
@@ -80,3 +164,6 @@ export function OutputGridPreview({
     </section>
   );
 }
+
+const isSupportedImage = (file: File): boolean =>
+  file.type.startsWith("image/") && file.size > 0 && file.size <= MAX_FILE_SIZE_BYTES;
