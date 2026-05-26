@@ -231,7 +231,7 @@ const revokeObjectUrlSoon = (url: string): void => {
 function BrandFitFooter() {
   return (
     <footer className="border-t border-brand-purple/20 py-6 text-sm text-brand-text-muted">
-      <div className="grid gap-5 lg:grid-cols-[minmax(260px,0.9fr)_minmax(320px,1fr)_auto] lg:items-start">
+      <div className="grid gap-5 lg:grid-cols-[minmax(260px,1fr)_minmax(360px,440px)_220px] lg:items-stretch">
         <div>
           <p>
             Built and Maintained by{" "}
@@ -253,20 +253,22 @@ function BrandFitFooter() {
           </Link>
         </div>
 
-        <div className="rounded-md border border-brand-purple/25 bg-brand-surface p-4 shadow-brand-purple">
-          <p className="text-xs font-semibold uppercase text-brand-orange">Open source project</p>
+        <div className="flex min-h-[122px] rounded-md border border-brand-purple/25 bg-brand-surface px-4 py-3 shadow-brand-purple">
           <GitHubLink ariaLabel="View PixelProLab BrandFit source code on GitHub">
-            <span className="mt-3 flex items-center gap-3 text-base font-semibold text-brand-text-main">
-              <GitHubIcon className="h-6 w-6" />
-              <span>BrandFit by Pixel Pro Lab is proudly open source.</span>
+            <span className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+              <span className="grid gap-1">
+                <span className="text-xs font-semibold uppercase text-brand-orange">Open source project</span>
+                <span className="text-sm font-semibold text-brand-text-main">
+                  BrandFit by Pixel Pro Lab is proudly open source.
+                </span>
+                <span className="text-sm text-brand-text-muted">contribute on GitHub.</span>
+              </span>
+              <GitHubIcon className="h-10 w-10 text-brand-text-main" />
             </span>
           </GitHubLink>
-          <p className="mt-2 text-sm leading-6 text-brand-text-muted">
-            View the code, inspect the local image-processing pipeline, and contribute on GitHub.
-          </p>
         </div>
 
-        <div className="rounded-md border border-brand-orange/35 bg-brand-surface p-4">
+        <div className="flex min-h-[122px] flex-col justify-center rounded-md border border-brand-orange/35 bg-brand-surface p-4">
           <p className="text-xs font-semibold uppercase text-brand-orange">Support open source</p>
           <button
             type="button"
