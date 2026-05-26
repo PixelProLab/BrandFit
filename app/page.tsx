@@ -231,30 +231,38 @@ const revokeObjectUrlSoon = (url: string): void => {
 function BrandFitFooter() {
   return (
     <footer className="border-t border-brand-purple/20 py-6 text-sm text-brand-text-muted">
-      <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <p>
-              Built and Maintained by{" "}
-              <a
-                href="https://pixelprotocol.co"
-                target="_blank"
-                rel="noreferrer"
-                className="font-semibold text-brand-text-main transition hover:text-brand-pink"
-              >
-                Pixel Pro Lab
-              </a>
-              .
-            </p>
-            <Link href="/about" className="font-semibold text-brand-text-main transition hover:text-brand-pink">
-              About BrandFit by Pixel Pro Lab
-            </Link>
-          </div>
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span>BrandFit by Pixel Pro Lab is Proudly Open Source, View the code on GitHub</span>
-            <GitHubLink ariaLabel="View PixelProLab BrandFit source code on GitHub">
-              <GitHubIcon />
-            </GitHubLink>
+      <div className="grid gap-5 lg:grid-cols-[minmax(260px,0.9fr)_minmax(320px,1fr)_auto] lg:items-start">
+        <div>
+          <p>
+            Built and Maintained by{" "}
+            <a
+              href="https://pixelprotocol.co"
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-brand-text-main transition hover:text-brand-pink"
+            >
+              Pixel Pro Lab
+            </a>
+            .
+          </p>
+          <Link
+            href="/about"
+            className="mt-5 inline-flex font-semibold text-brand-text-main transition hover:text-brand-pink"
+          >
+            About BrandFit by Pixel Pro Lab
+          </Link>
+        </div>
+
+        <div className="rounded-md border border-brand-purple/25 bg-brand-surface p-4 shadow-brand-purple">
+          <p className="text-xs font-semibold uppercase text-brand-orange">Open source project</p>
+          <GitHubLink ariaLabel="View PixelProLab BrandFit source code on GitHub">
+            <span className="mt-3 flex items-center gap-3 text-base font-semibold text-brand-text-main">
+              <GitHubIcon className="h-6 w-6" />
+              <span>BrandFit by Pixel Pro Lab is proudly open source.</span>
+            </span>
+          </GitHubLink>
+          <p className="mt-2 text-sm leading-6 text-brand-text-muted">
+            View the code, inspect the local image-processing pipeline, and contribute on GitHub.
           </p>
         </div>
 
@@ -294,12 +302,12 @@ function GitHubLink({
   );
 }
 
-function GitHubIcon() {
+function GitHubIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"
       viewBox="0 0 24 24"
-      className="h-4 w-4"
+      className={className}
       fill="currentColor"
     >
       <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.36 6.84 9.72.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.19-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.98c.85 0 1.7.12 2.5.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.6.69.49A10.14 10.14 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z" />
