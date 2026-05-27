@@ -55,7 +55,6 @@ export default function Home() {
 
   const updateManualScale = useCallback(
     (id: string, manualScale: number) => {
-      setExportMessage("Manual scale updated. Reprocessing selected logo locally.");
       dispatch({ type: "update-job-manual-scale", id, manualScale });
     },
     [],

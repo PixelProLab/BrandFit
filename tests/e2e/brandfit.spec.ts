@@ -42,7 +42,6 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Export ZIP" })).toBeVisible();
 
   await page.getByLabel("Selected logo controls").getByRole("button", { name: "Bigger" }).click();
-  await expect(page.getByText(/Manual scale updated/)).toBeVisible();
   await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
   await expect(page.getByLabel("Final output grid preview").getByText("Manual 104%")).toBeVisible();
 
