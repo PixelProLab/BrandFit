@@ -69,6 +69,9 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   expect(names).toHaveLength(2);
   expect(names.every((name) => name.endsWith(".png"))).toBe(true);
   expect(externalProcessingRequests).toEqual([]);
+
+  await page.getByLabel("Final output grid preview").getByRole("button", { name: "Remove selected" }).click();
+  await expect(page.getByTestId("logo-card")).toHaveCount(1);
 });
 
 test("has no critical accessibility violations on the initial workspace", async ({ page }) => {

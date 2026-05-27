@@ -212,13 +212,15 @@ export function LogoPreviewGrid({
 
 function PreviewSlot({ label, src }: { label: string; src: string }) {
   return (
-    <div className="flex aspect-square flex-col items-center justify-center border-r border-brand-purple/20 p-4 last:border-r-0">
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={label} className="max-h-full max-w-full object-contain" />
-      ) : (
-        <span className="text-xs font-medium text-brand-text-muted">Waiting</span>
-      )}
+    <div className="flex aspect-square flex-col items-center justify-center border-r border-brand-purple/20 p-3 last:border-r-0">
+      <span className="flex aspect-square w-full max-w-[7.5rem] items-center justify-center rounded bg-[linear-gradient(45deg,#111_25%,transparent_25%),linear-gradient(-45deg,#111_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#111_75%),linear-gradient(-45deg,transparent_75%,#111_75%)] bg-[length:18px_18px] bg-[position:0_0,0_9px,9px_-9px,-9px_0] p-3">
+        {src ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={src} alt={label} className="max-h-full max-w-full object-contain" />
+        ) : (
+          <span className="text-xs font-medium text-brand-text-muted">Waiting</span>
+        )}
+      </span>
       <span className="mt-3 rounded bg-black/70 px-2 py-1 text-[11px] font-medium text-brand-text-muted">
         {label}
       </span>

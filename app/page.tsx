@@ -185,6 +185,7 @@ export default function Home() {
               selectedJobId={state.selectedJobId}
               onFilesAccepted={queueFiles}
               onSelect={selectJob}
+              onRemoveSelected={removeJob}
             />
             <LogoPreviewGrid
               jobs={state.jobs}
