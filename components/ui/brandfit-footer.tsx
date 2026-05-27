@@ -5,9 +5,9 @@ import type { ReactNode } from "react";
 export function BrandFitFooter() {
   return (
     <footer className="border-t border-brand-purple/20 py-6 text-sm text-brand-text-muted">
-      <div className="grid gap-5 lg:grid-cols-[minmax(260px,1fr)_minmax(360px,440px)_220px] lg:items-stretch">
+      <div className="grid gap-5 lg:grid-cols-[minmax(240px,1fr)_250px_minmax(360px,440px)_220px] lg:items-stretch">
         <div className="flex min-h-[122px] items-center">
-          <p className="text-lg font-semibold leading-7 text-brand-text-main">
+          <p className="text-base font-semibold leading-7 text-brand-text-main xl:text-lg">
             Built and Maintained by{" "}
             <a
               href="https://pixelprotocol.co"
@@ -21,8 +21,28 @@ export function BrandFitFooter() {
           </p>
         </div>
 
+        <div className="flex min-h-[122px] items-center lg:justify-center">
+          <a
+            href="https://www.producthunt.com/products/brandfit-by-pixel-pro-lab?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-brandfit-by-pixel-pro-lab"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View BrandFit by Pixel Pro Lab on Product Hunt"
+            className="inline-flex rounded-md border border-brand-purple/20 bg-brand-surface p-1 shadow-brand-purple transition hover:border-brand-pink"
+          >
+            {/* Product Hunt provides this official badge image for the launch page. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt="BrandFit By Pixel Pro Lab - Balance Your Logo Grids for Optically Balanced Layouts | Product Hunt"
+              width="250"
+              height="54"
+              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1156543&theme=dark&t=1779845203266"
+              className="h-[54px] w-[250px]"
+            />
+          </a>
+        </div>
+
         <div className="flex min-h-[122px] rounded-md border border-brand-purple/25 bg-brand-surface px-4 py-3 shadow-brand-purple">
-          <GitHubLink ariaLabel="View PixelProLab BrandFit source code on GitHub">
+          <GitHubLink ariaLabel="View PixelProLab BrandFit by Pixel Pro Lab source code on GitHub">
             <span className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
               <span className="grid gap-1">
                 <span className="text-xs font-semibold uppercase text-brand-orange">Open source project</span>

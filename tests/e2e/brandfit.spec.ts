@@ -3,14 +3,15 @@ import { AxeBuilder } from "@axe-core/playwright";
 import JSZip from "jszip";
 
 test("processes logos locally and exports a zip", async ({ page }) => {
-  const logoRequests: string[] = [];
+  const externalProcessingRequests: string[] = [];
   page.on("request", (request) => {
     const url = request.url();
     if (
       (url.startsWith("http://") || url.startsWith("https://")) &&
-      !url.startsWith("http://localhost:3000")
+      !url.startsWith("http://localhost:3000") &&
+      !url.startsWith("https://api.producthunt.com/widgets/embed-image")
     ) {
-      logoRequests.push(url);
+      externalProcessingRequests.push(url);
     }
   });
 
@@ -67,7 +68,7 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   expect(download.suggestedFilename()).toBe("brandfit-logos.zip");
   expect(names).toHaveLength(2);
   expect(names.every((name) => name.endsWith(".png"))).toBe(true);
-  expect(logoRequests).toEqual([]);
+  expect(externalProcessingRequests).toEqual([]);
 });
 
 test("has no critical accessibility violations on the initial workspace", async ({ page }) => {
