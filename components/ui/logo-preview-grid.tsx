@@ -142,9 +142,9 @@ export function LogoPreviewGrid({
     <section aria-label="Processed logos" className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-brand-text-main">Diagnostics</h2>
+          <h2 className="text-lg font-semibold text-brand-text-main">Logo Processing Details</h2>
           <p className="mt-1 text-sm text-brand-text-muted">
-            Source, trim, density, and scale details for each processed logo.
+            Review trim bounds, output size, density, and scale for each optimized logo.
           </p>
         </div>
       </div>
