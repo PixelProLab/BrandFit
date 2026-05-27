@@ -6,61 +6,32 @@ const siteUrl = "https://brandfit-design.netlify.app";
 const repositoryUrl = "https://github.com/PixelProLab/BrandFit";
 const productName = "BrandFit by Pixel Pro Lab";
 const seoDescription =
-  "BrandFit by Pixel Pro Lab is an automated batch image resizer, aspect ratio fitting tool, padding utility, and brand assets optimizer for privacy-first logo grids.";
+  "BrandFit by Pixel Pro Lab is a zero-server batch logo resizer for sponsor logo grid cleanup, optical padding control, batch exports, and local design ops.";
 
-const structuredData = [
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: productName,
-    alternateName: "BrandFit",
-    applicationCategory: "DesignApplication",
-    operatingSystem: "Web browser",
-    url: siteUrl,
-    codeRepository: repositoryUrl,
-    isAccessibleForFree: true,
-    creator: {
-      "@type": "Organization",
-      name: "Pixel Pro Lab",
-      url: "https://github.com/PixelProLab",
-    },
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    keywords: [
-      "automated batch image resizer",
-      "aspect ratio fitting",
-      "padding utility",
-      "brand assets",
-      "logo grid",
-      "logo resizer",
-      "brand asset optimizer",
-      "Pixel Pro Lab",
-      "BrandFit by Pixel Pro Lab",
-    ],
-    description: seoDescription,
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: productName,
-    url: siteUrl,
-    description: seoDescription,
-    publisher: {
-      "@type": "Organization",
-      name: "Pixel Pro Lab",
-    },
-  },
-  {
-    "@context": "https://schema.org",
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "BrandFit by Pixel Pro Lab",
+  applicationCategory: "DesignApplication, WebApplication",
+  operatingSystem: "All",
+  browserRequirements: "Requires HTML5 Canvas API",
+  url: `${siteUrl}/`,
+  downloadUrl: repositoryUrl,
+  softwareVersion: "1.0.0",
+  description:
+    "An open-source, privacy-first automated batch image resizer and padding utility. BrandFit by Pixel Pro Lab optically balances and standardizes sponsor logo grids, partner walls, and corporate brand assets locally in the browser.",
+  author: {
     "@type": "Organization",
     name: "Pixel Pro Lab",
-    url: "https://github.com/PixelProLab",
-    sameAs: [repositoryUrl],
   },
-];
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  keywords:
+    "batch logo resizer, optical balance logo grid, sponsor logo wall tool, transparent whitespace trimmer, local image padding utility, open source asset normalization",
+};
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -74,26 +45,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  applicationName: "BrandFit",
+  applicationName: productName,
   metadataBase: new URL(siteUrl),
-  title: {
-    default: "BrandFit by Pixel Pro Lab | Automated Batch Image Resizer for Brand Assets",
-    template: "%s | BrandFit by Pixel Pro Lab",
-  },
+  title: "BrandFit | Open-Source Logo Grid & Batch Resizer by Pixel Pro Lab",
   description: seoDescription,
   keywords: [
-    "BrandFit",
     "BrandFit by Pixel Pro Lab",
     "Pixel Pro Lab",
-    "automated batch image resizer",
-    "aspect ratio fitting",
-    "padding utility",
-    "brand assets",
-    "logo grid generator",
-    "logo resizer",
-    "image padding tool",
-    "brand asset optimizer",
+    "batch logo resizer",
+    "optical balance logo grid",
     "sponsor logo grid",
+    "sponsor logo wall tool",
+    "transparent whitespace trimmer",
+    "zero-server image utility",
   ],
   authors: [{ name: "Pixel Pro Lab", url: "https://github.com/PixelProLab" }],
   creator: "Pixel Pro Lab",
@@ -107,7 +71,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: productName,
-    title: "BrandFit by Pixel Pro Lab | Automated Batch Image Resizer for Brand Assets",
+    title: "BrandFit by Pixel Pro Lab | Open-Source Logo Grid & Batch Resizer",
     description: seoDescription,
     images: [
       {
@@ -120,7 +84,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BrandFit by Pixel Pro Lab | Automated Batch Image Resizer for Brand Assets",
+    title: "BrandFit by Pixel Pro Lab | Open-Source Logo Grid & Batch Resizer",
     description: seoDescription,
     images: ["/BrandFit GitHub Social Preview.png"],
   },
@@ -171,7 +135,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           // JSON-LD is static product metadata for search engines and AI agents.
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
         />
         {children}
       </body>

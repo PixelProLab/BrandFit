@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "BrandFit by Pixel Pro Lab",
-    short_name: "BrandFit",
+    short_name: "BrandFit by Pixel Pro Lab",
     description:
       "Client-side logo trimming, optical balancing, color normalization, and ZIP export.",
     start_url: "/",

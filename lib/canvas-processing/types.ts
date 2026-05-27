@@ -1,5 +1,5 @@
 /**
- * Shared types for BrandFit's local image-processing pipeline.
+ * Shared types for BrandFit by Pixel Pro Lab's local image-processing pipeline.
  *
  * Keep these types free of React imports so Canvas workers, browser utilities,
  * and UI components can all depend on the same contracts without creating
@@ -64,7 +64,7 @@ export type LogoOutputSettings = {
   /**
    * Per-logo multiplier applied after automatic optical balancing.
    *
-   * BrandFit's density heuristic gives every logo a strong first pass, but
+   * BrandFit by Pixel Pro Lab's density heuristic gives every logo a strong first pass, but
    * brand marks are subjective: a sponsor may require a slightly larger
    * wordmark, or a dense emblem may need to recede. Keeping this as an explicit
    * multiplier makes manual review predictable and easy to serialize later.

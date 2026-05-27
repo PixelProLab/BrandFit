@@ -257,7 +257,7 @@ export const fitLogoIntoSquareOutput = (
    * The pipeline first finds the maximum safe geometric fit, then applies the
    * automatic density correction. The reviewer adjustment is intentionally the
    * final multiplier so "make this logo 8% bigger" means 8% bigger than
-   * BrandFit's recommended output, not 8% bigger than the raw source bounds.
+   * BrandFit by Pixel Pro Lab's recommended output, not 8% bigger than the raw source bounds.
    */
   const scale = geometricScale * metrics.opticalScale * manualScale;
   const width = trimBounds.width * scale;
@@ -377,7 +377,7 @@ export const canvasToEmbeddedSvgBlob = (canvas: HTMLCanvasElement): Blob => {
    * WHY this is an SVG export instead of vector tracing:
    * Most uploaded sponsor files are raster screenshots, PNGs, or flattened
    * artwork. Automatic vector tracing would invent paths, lose brand detail,
-   * and imply a precision we cannot guarantee in a privacy-first MVP. Wrapping
+   * and imply a precision we cannot guarantee in a privacy-first release. Wrapping
    * the processed canvas in an SVG preserves the standardized square viewBox
    * and layout behavior while keeping the logo pixels faithful to the source.
    */
@@ -492,7 +492,7 @@ const get2dContext = (canvas: HTMLCanvasElement): CanvasRenderingContext2D => {
 
 const computeOpticalScale = (visiblePixelRatio: number, alphaDensity: number): number => {
   /*
-   * WHY this heuristic works for MVP:
+   * WHY this heuristic works for the first release:
    * Designers judge logo size by ink density, not by bounding boxes. A sparse
    * wordmark inside a wide trim box looks smaller than a filled app icon at the
    * same geometric size, so we gently enlarge sparse marks and slightly reduce

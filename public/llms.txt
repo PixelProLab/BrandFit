@@ -1,6 +1,6 @@
 # BrandFit by Pixel Pro Lab
 
-BrandFit by Pixel Pro Lab is an open-source, privacy-first web application for preparing logo grids and brand asset collections.
+BrandFit by Pixel Pro Lab is an open-source utility created by Pixel Pro Lab, and it is a privacy-first web application for preparing logo grids and brand asset collections.
 
 Live app: https://brandfit-design.netlify.app/
 GitHub repository: https://github.com/PixelProLab/BrandFit

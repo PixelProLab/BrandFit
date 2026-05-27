@@ -1,14 +1,14 @@
-# BrandFit
+# BrandFit by Pixel Pro Lab
 
 Optically balance your logo grids for perfectly uniform visual layouts.
 
-BrandFit is a privacy-first, browser-native tool for standardizing logos, icons, and graphics before they enter sponsor grids, partner walls, government portals, event sites, and corporate web layouts.
+BrandFit by Pixel Pro Lab is a privacy-first, browser-native tool for standardizing logos, icons, and graphics before they enter sponsor grids, partner walls, government portals, event sites, and corporate web layouts.
 
-Built and maintained by [Pixel Pro Lab](https://github.com/PixelProLab). BrandFit is proudly open source. View the code on [GitHub](https://github.com/PixelProLab/BrandFit).
+Built and maintained by [Pixel Pro Lab](https://github.com/PixelProLab). BrandFit by Pixel Pro Lab is proudly open source. View the code on [GitHub](https://github.com/PixelProLab/BrandFit).
 
 ## Live Demo
 
-Test BrandFit in the browser at [https://brandfit-design.netlify.app/](https://brandfit-design.netlify.app/).
+Test BrandFit by Pixel Pro Lab in the browser at [https://brandfit-design.netlify.app/](https://brandfit-design.netlify.app/).
 
 No install or download is required to evaluate the app. The hosted version still processes logos locally in the browser; files are not uploaded to a server.
 
@@ -25,17 +25,17 @@ BrandFit by Pixel Pro Lab includes crawlable metadata and structured discovery r
 
 Creating a uniform grid from diverse logos is a persistent design challenge. A square icon, a wide wordmark, and a complex emblem can all share the same mathematical dimensions but appear visually disproportionate when placed side-by-side.
 
-BrandFit automates this alignment. It processes raw logo files so they are trimmed, optically balanced, consistently padded, manually adjustable, and ready to export as a unified, visually stable grid.
+BrandFit by Pixel Pro Lab automates this alignment. It processes raw logo files so they are trimmed, optically balanced, consistently padded, manually adjustable, and ready to export as a unified, visually stable grid.
 
 ## The Privacy Model: Zero-Server Processing
 
-BrandFit operates entirely within the browser, ensuring strict asset security. No files are ever uploaded to an external server.
+BrandFit by Pixel Pro Lab operates entirely within the browser, ensuring strict asset security. No files are ever uploaded to an external server.
 
 - Canvas operations and optical balancing run client-side.
 - Bulk ZIP generation runs client-side.
 - **Zero data leaves your machine.**
 
-This zero-server architecture makes BrandFit safe for processing unreleased assets, confidential client branding, or internal corporate marks where data privacy is a strict requirement.
+This zero-server architecture makes BrandFit by Pixel Pro Lab safe for processing unreleased assets, confidential client branding, or internal corporate marks where data privacy is a strict requirement.
 
 ## How It Works
 
@@ -48,7 +48,7 @@ This zero-server architecture makes BrandFit safe for processing unreleased asse
 
 ## Architecture & Contribution
 
-BrandFit is structured so developers can contribute to specific modules without interfering with the core logic.
+BrandFit by Pixel Pro Lab is structured so developers can contribute to specific modules without interfering with the core logic.
 
 - `/components/ui`: Presentational elements. Contains no canvas math or image-processing algorithms.
 - `/lib/canvas-processing`: The core engine. Owns trimming, density measurement, and browser-side file generation. *Note: Complex math functions here are explicitly commented to explain the "why," not just the "how."*

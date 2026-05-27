@@ -8,7 +8,7 @@ const linkedInUrl = "https://www.linkedin.com/company/pixelprolab/";
 export const metadata: Metadata = {
   title: "About BrandFit by Pixel Pro Lab",
   description:
-    "Learn why Pixel Pro Lab built BrandFit, an open-source automated batch image resizer, aspect ratio fitting tool, padding utility, and brand assets optimizer.",
+    "Learn why Pixel Pro Lab built BrandFit by Pixel Pro Lab, an open-source batch logo resizer for sponsor logo grids.",
   alternates: {
     canonical: "/about",
   },
@@ -17,8 +17,8 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-brand-bg text-brand-text-main">
-      <section className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
-        <nav className="flex flex-wrap items-center justify-between gap-3" aria-label="BrandFit resources">
+      <section id="about" className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
+        <nav className="flex flex-wrap items-center justify-between gap-3" aria-label="BrandFit by Pixel Pro Lab resources">
           <Link
             href="/"
             className="inline-flex h-9 items-center rounded-md bg-brand-purple px-3 text-sm font-bold text-brand-text-main transition hover:bg-brand-pink"
@@ -64,7 +64,7 @@ export default function AboutPage() {
           </p>
         </header>
 
-        <section className="grid gap-4 md:grid-cols-3" aria-label="BrandFit mission pillars">
+        <section className="grid gap-4 md:grid-cols-3" aria-label="BrandFit by Pixel Pro Lab mission pillars">
           <article className="rounded-md border border-brand-purple/20 bg-brand-surface p-5 shadow-brand-purple">
             <h2 className="text-lg font-semibold">Local-first privacy</h2>
             <p className="mt-3 text-sm leading-6 text-brand-text-muted">
@@ -92,20 +92,40 @@ export default function AboutPage() {
           <h2 className="text-2xl font-semibold">The mission behind BrandFit by Pixel Pro Lab</h2>
           <div className="mt-4 space-y-4 text-sm leading-7 text-brand-text-muted">
             <p>
-              Every public website eventually becomes a home for brand assets: partners, sponsors, agencies,
-              government entities, event collaborators, press marks, and internal programs. When those assets are
-              dropped into a standard CSS grid, the result often feels uneven. A dense emblem can overpower a wordmark;
-              a wide logo can feel too small; a file with excess transparent space can break alignment altogether.
+              BrandFit by Pixel Pro Lab was built to solve the operational nightmare of aligning messy partner logos
+              for event sponsor grids and digital graphics. Production teams routinely receive files with mismatched
+              aspect ratios, hidden transparent whitespace, uneven visual density, and color variants that were never
+              designed to sit together in a single sponsor wall.
             </p>
             <p>
-              BrandFit by Pixel Pro Lab turns that repetitive cleanup work into a transparent browser workflow. It is
-              an automated batch image resizer, aspect ratio fitting tool, padding utility, and brand assets optimizer
-              built for modern web teams that need consistent visual output without sending sensitive files to a server.
+              Without a dedicated workflow, the cleanup becomes a slow cycle of manual cropping, resizing, nudging,
+              exporting, and second-guessing whether every mark has the same optical weight. BrandFit by Pixel Pro Lab
+              turns that repetitive cleanup into a zero-server browser utility for batch logo resizing, transparent
+              whitespace trimming, padding normalization, and consistent square exports.
             </p>
             <p>
-              The long-term goal is simple: make polished brand presentation accessible to teams of every size, while
-              keeping the implementation readable enough for open-source contributors and AI agents to understand.
+              The tool is deliberately open source so designers, engineers, and AI agents can inspect the logic behind
+              the grid. It exists for the real working moment when a launch deck, event page, sponsor carousel, partner
+              wall, or digital campaign needs dozens of imperfect logos to look calm, balanced, and credible.
             </p>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold">
+            <a
+              href={repositoryUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-10 items-center rounded-md bg-brand-purple px-4 text-brand-text-main transition hover:bg-brand-pink"
+            >
+              View the Code: BrandFit by Pixel Pro Lab on GitHub
+            </a>
+            <a
+              href="https://brandfit-design.netlify.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-10 items-center rounded-md border border-brand-purple/35 px-4 text-brand-text-main transition hover:border-brand-pink hover:text-brand-pink"
+            >
+              Launch the App: BrandFit by Pixel Pro Lab
+            </a>
           </div>
         </section>
       </section>
