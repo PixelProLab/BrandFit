@@ -46,7 +46,6 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   await expect(page.getByLabel("Final output grid preview").getByText("Manual 104%")).toBeVisible();
 
   await page.getByRole("button", { name: "PNG", exact: true }).click();
-  await expect(page.getByText(/Reprocessing/)).toBeVisible();
   await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
 
   const downloadPromise = page.waitForEvent("download");

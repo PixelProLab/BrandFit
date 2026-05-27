@@ -44,7 +44,6 @@ export default function Home() {
   }, []);
 
   const updateSettings = useCallback((settings: Partial<LogoWorkspaceSettings>) => {
-    setExportMessage("Settings updated. Reprocessing queued logos locally.");
     dispatch({ type: "update-settings", settings });
     dispatch({ type: "reprocess-all" });
   }, []);
