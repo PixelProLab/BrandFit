@@ -171,7 +171,7 @@ export function LogoPreviewGrid({
                 aria-label={`Select ${job.file.name} for live editing`}
               >
                 <PreviewSlot label="Original" src={job.previewUrl} />
-                <PreviewSlot label="BrandFit by Pixel Pro Lab output" src={outputUrl} />
+                <PreviewSlot label="Output" src={outputUrl} />
               </button>
               <div className="p-4">
                 <div className="flex items-start justify-between gap-3">
