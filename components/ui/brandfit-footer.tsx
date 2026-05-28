@@ -56,17 +56,18 @@ export function BrandFitFooter() {
           </GitHubLink>
         </div>
 
-        <div className="flex min-h-[122px] flex-col justify-center rounded-md border border-brand-orange/35 bg-brand-surface p-4">
-          <p className="text-xs font-semibold uppercase text-brand-orange">Support open source</p>
-          <button
-            type="button"
-            disabled
-            className="mt-2 h-10 rounded-md border border-brand-orange/45 px-4 text-sm font-bold text-brand-orange opacity-70"
-            aria-label="Buy me a coffee donation button coming soon"
-          >
+        <a
+          href="https://ko-fi.com/pixelprolab"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Support BrandFit by Pixel Pro Lab on Ko-fi"
+          className="flex min-h-[122px] cursor-pointer flex-col justify-center rounded-md border border-brand-orange/35 bg-brand-surface p-4 text-inherit no-underline transition hover:border-brand-pink hover:shadow-brand-pink"
+        >
+          <span className="text-xs font-semibold uppercase text-brand-orange">Support open source</span>
+          <span className="mt-2 inline-flex h-10 items-center justify-center rounded-md border border-brand-orange/45 px-4 text-sm font-bold text-brand-orange transition hover:border-brand-pink hover:text-brand-pink">
             Buy me a coffee
-          </button>
-        </div>
+          </span>
+        </a>
       </div>
     </footer>
   );
