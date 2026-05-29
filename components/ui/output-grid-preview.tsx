@@ -11,6 +11,7 @@ type OutputGridPreviewProps = {
   onFilesAccepted: (files: File[]) => void;
   onSelect: (id: string) => void;
   onRemoveSelected: (id: string) => void;
+  onRemoveAll: () => void;
 };
 
 const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024;
@@ -22,6 +23,7 @@ export function OutputGridPreview({
   onFilesAccepted,
   onSelect,
   onRemoveSelected,
+  onRemoveAll,
 }: OutputGridPreviewProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -123,6 +125,13 @@ export function OutputGridPreview({
             className="h-9 rounded-md border border-brand-pink/35 bg-black px-3 text-xs font-bold text-brand-text-muted transition hover:border-brand-pink hover:text-brand-text-main focus:outline-none focus:ring-2 focus:ring-brand-pink focus:ring-offset-2 focus:ring-offset-brand-bg"
           >
             Remove selected
+          </button>
+          <button
+            type="button"
+            onClick={onRemoveAll}
+            className="h-9 rounded-md border border-brand-pink/35 bg-black px-3 text-xs font-bold text-brand-text-muted transition hover:border-brand-pink hover:text-brand-text-main focus:outline-none focus:ring-2 focus:ring-brand-pink focus:ring-offset-2 focus:ring-offset-brand-bg"
+          >
+            Remove all
           </button>
           <span className="rounded border border-brand-orange/40 bg-brand-orange/10 px-2 py-1 text-xs font-semibold text-brand-orange">
             {jobs.length} output{jobs.length === 1 ? "" : "s"}

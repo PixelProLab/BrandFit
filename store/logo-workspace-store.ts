@@ -131,10 +131,9 @@ export const logoWorkspaceReducer = (
         jobs: state.jobs.map((job) => ({
           ...job,
           status: "queued",
-          processedLogo: null,
           error: null,
         })),
-        logos: [],
+        logos: state.jobs.flatMap((job) => (job.processedLogo ? [job.processedLogo] : [])),
       };
     case "select-job":
       return {

@@ -27,6 +27,7 @@ export default function Home() {
   const [exportMessage, setExportMessage] = useState<string | null>(null);
   const processingIds = useRef(new Set<string>());
   const outputUrlsRef = useRef<Record<string, string>>({});
+  const settingsReprocessTimer = useRef<number | null>(null);
 
   const completedJobs = useMemo(
     () => state.jobs.filter((job) => job.processedLogo?.blob),
@@ -45,7 +46,20 @@ export default function Home() {
 
   const updateSettings = useCallback((settings: Partial<LogoWorkspaceSettings>) => {
     dispatch({ type: "update-settings", settings });
-    dispatch({ type: "reprocess-all" });
+    if (settingsReprocessTimer.current) {
+      window.clearTimeout(settingsReprocessTimer.current);
+      settingsReprocessTimer.current = null;
+    }
+
+    if (settings.paddingRatio === undefined) {
+      dispatch({ type: "reprocess-all" });
+      return;
+    }
+
+    settingsReprocessTimer.current = window.setTimeout(() => {
+      dispatch({ type: "reprocess-all" });
+      settingsReprocessTimer.current = null;
+    }, 180);
   }, []);
 
   const selectJob = useCallback((id: string | null) => {
@@ -84,12 +98,8 @@ export default function Home() {
   }, [outputUrls]);
 
   const reprocessAll = useCallback(() => {
-    Object.values(outputUrls).forEach(revokeObjectUrlSoon);
-    setOutputUrls({});
-    processingIds.current.clear();
-    setExportMessage("Reprocessing all logos with current settings.");
     dispatch({ type: "reprocess-all" });
-  }, [outputUrls]);
+  }, []);
 
   const exportZip = useCallback(async () => {
     const entries = completedJobs.flatMap((job) => {
@@ -119,44 +129,55 @@ export default function Home() {
   }, [completedJobs]);
 
   useEffect(() => {
-    const queuedJobs = state.jobs.filter(
-      (job) => job.status === "queued" && !processingIds.current.has(job.id),
+    if (processingIds.current.size > 0) {
+      return;
+    }
+
+    const job = state.jobs.find(
+      (candidate) => candidate.status === "queued" && !processingIds.current.has(candidate.id),
     );
 
-    for (const job of queuedJobs) {
-      processingIds.current.add(job.id);
-      const previewUrl = job.previewUrl || URL.createObjectURL(job.file);
-      dispatch({ type: "mark-processing", id: job.id, previewUrl });
+    if (!job) {
+      return;
+    }
 
-      processLogoFile(job.file, {
+    processingIds.current.add(job.id);
+    const previewUrl = job.previewUrl || URL.createObjectURL(job.file);
+    dispatch({ type: "mark-processing", id: job.id, previewUrl });
+
+    const processQueuedJob = async () => {
+      await yieldToBrowser();
+      return processLogoFile(job.file, {
         id: job.id,
         outputSize: state.settings.outputSize,
         paddingRatio: state.settings.paddingRatio,
         normalizationMode: state.settings.normalizationMode,
         exportFormat: state.settings.exportFormat,
         manualScale: job.manualScale,
-      })
-        .then((logo) => {
-          const outputUrl = URL.createObjectURL(logo.blob);
-          setOutputUrls((current) => {
-            if (current[job.id]) {
-              revokeObjectUrlSoon(current[job.id]);
-            }
-            return { ...current, [job.id]: outputUrl };
-          });
-          dispatch({ type: "mark-complete", id: job.id, logo });
-        })
-        .catch((error) => {
-          dispatch({
-            type: "mark-error",
-            id: job.id,
-            error: error instanceof Error ? error.message : "Unable to process this logo.",
-          });
-        })
-        .finally(() => {
-          processingIds.current.delete(job.id);
+      });
+    };
+
+    processQueuedJob()
+      .then((logo) => {
+        const outputUrl = URL.createObjectURL(logo.blob);
+        setOutputUrls((current) => {
+          if (current[job.id]) {
+            revokeObjectUrlSoon(current[job.id]);
+          }
+          return { ...current, [job.id]: outputUrl };
         });
-    }
+        dispatch({ type: "mark-complete", id: job.id, logo });
+      })
+      .catch((error) => {
+        dispatch({
+          type: "mark-error",
+          id: job.id,
+          error: error instanceof Error ? error.message : "Unable to process this logo.",
+        });
+      })
+      .finally(() => {
+        processingIds.current.delete(job.id);
+      });
   }, [state.jobs, state.settings]);
 
   useEffect(() => {
@@ -165,6 +186,9 @@ export default function Home() {
 
   useEffect(
     () => () => {
+      if (settingsReprocessTimer.current) {
+        window.clearTimeout(settingsReprocessTimer.current);
+      }
       Object.values(outputUrlsRef.current).forEach((url) => URL.revokeObjectURL(url));
     },
     [],
@@ -184,6 +208,7 @@ export default function Home() {
               onFilesAccepted={queueFiles}
               onSelect={selectJob}
               onRemoveSelected={removeJob}
+              onRemoveAll={resetWorkspace}
             />
             <LogoPreviewGrid
               jobs={state.jobs}
@@ -195,11 +220,6 @@ export default function Home() {
             />
           </div>
           <div className="lg:sticky lg:top-5 lg:self-start">
-            {exportMessage ? (
-              <p className="mb-4 rounded-md border border-brand-pink/30 bg-brand-pink/10 p-3 text-sm text-brand-text-main shadow-brand-pink">
-                {exportMessage}
-              </p>
-            ) : null}
             <SettingsPanel
               settings={state.settings}
               isProcessing={isProcessing}
@@ -209,13 +229,21 @@ export default function Home() {
               onManualScaleChange={updateManualScale}
               onReprocess={reprocessAll}
               onExport={exportZip}
-              onReset={resetWorkspace}
             />
           </div>
         </div>
 
         <BrandFitFooter />
       </div>
+      {exportMessage ? (
+        <p
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-4 left-4 z-50 max-w-sm rounded-md border border-brand-pink/30 bg-brand-surface/95 p-3 text-sm text-brand-text-main shadow-brand-pink backdrop-blur"
+        >
+          {exportMessage}
+        </p>
+      ) : null}
     </main>
   );
 }
@@ -223,3 +251,8 @@ export default function Home() {
 const revokeObjectUrlSoon = (url: string): void => {
   window.setTimeout(() => URL.revokeObjectURL(url), 5000);
 };
+
+const yieldToBrowser = (): Promise<void> =>
+  new Promise((resolve) => {
+    window.requestAnimationFrame(() => window.setTimeout(resolve, 0));
+  });

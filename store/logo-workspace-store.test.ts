@@ -113,4 +113,25 @@ describe("logo workspace reducer", () => {
     });
     expect(scaled.logos).toEqual([complete.jobs[0].processedLogo]);
   });
+
+  it("keeps processed outputs mounted while all logos reprocess", () => {
+    const file = new File(["brand"], "Acme Mark.png", { type: "image/png" });
+    const queued = logoWorkspaceReducer(createInitialLogoWorkspaceState(), {
+      type: "queue-files",
+      files: [file],
+    });
+    const complete = logoWorkspaceReducer(queued, {
+      type: "mark-complete",
+      id: queued.jobs[0].id,
+      logo: makeProcessedLogo(queued.jobs[0].id),
+    });
+    const reprocessing = logoWorkspaceReducer(complete, { type: "reprocess-all" });
+
+    expect(reprocessing.jobs[0]).toMatchObject({
+      status: "queued",
+      processedLogo: complete.jobs[0].processedLogo,
+      error: null,
+    });
+    expect(reprocessing.logos).toEqual([complete.jobs[0].processedLogo]);
+  });
 });

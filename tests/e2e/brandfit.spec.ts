@@ -45,7 +45,24 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
   await expect(page.getByLabel("Final output grid preview").getByText("Manual 104%")).toBeVisible();
 
+  const stableScrollY = await page.evaluate(() => window.scrollY);
+  await page.getByLabel(/Padding/).evaluate((input: HTMLInputElement) => {
+    input.value = "0.2";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  await expect(page.getByLabel("Final output grid preview").getByText("Processing")).toHaveCount(0);
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(stableScrollY);
+  await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
+
+  await page.getByRole("button", { name: "Black", exact: true }).click();
+  await expect(page.getByLabel("Final output grid preview").getByText("Processing")).toHaveCount(0);
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(stableScrollY);
+  await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
+
   await page.getByRole("button", { name: "PNG", exact: true }).click();
+  await expect(page.getByLabel("Final output grid preview").getByText("Processing")).toHaveCount(0);
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(stableScrollY);
   await expect(page.getByText("complete")).toHaveCount(2, { timeout: 20_000 });
 
   const downloadPromise = page.waitForEvent("download");
@@ -67,9 +84,13 @@ test("processes logos locally and exports a zip", async ({ page }) => {
   expect(names).toHaveLength(2);
   expect(names.every((name) => name.endsWith(".png"))).toBe(true);
   expect(externalProcessingRequests).toEqual([]);
+  await expect(page.getByRole("status")).toContainText("Exported 2 processed logos as brandfit-logos.zip.");
+  await expect(page.locator("aside").getByText(/Exported/)).toHaveCount(0);
 
   await page.getByLabel("Final output grid preview").getByRole("button", { name: "Remove selected" }).click();
   await expect(page.getByTestId("logo-card")).toHaveCount(1);
+  await page.getByLabel("Final output grid preview").getByRole("button", { name: "Remove all" }).click();
+  await expect(page.getByTestId("logo-card")).toHaveCount(0);
 });
 
 test("has no critical accessibility violations on the initial workspace", async ({ page }) => {

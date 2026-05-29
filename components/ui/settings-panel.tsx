@@ -12,7 +12,6 @@ type SettingsPanelProps = {
   onManualScaleChange: (id: string, manualScale: number) => void;
   onReprocess: () => void;
   onExport: () => void;
-  onReset: () => void;
 };
 
 const normalizationModes: Array<{ value: ColorNormalizationMode; label: string }> = [
@@ -37,7 +36,6 @@ export function SettingsPanel({
   onManualScaleChange,
   onReprocess,
   onExport,
-  onReset,
 }: SettingsPanelProps) {
   const selectedLogoIsEditable = Boolean(selectedJob && selectedJob.status === "complete" && !isProcessing);
 
@@ -51,6 +49,25 @@ export function SettingsPanel({
         <span className="rounded bg-brand-purple/20 px-2 py-1 text-xs font-medium text-brand-text-main">
           {completedCount} ready
         </span>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={onExport}
+          disabled={completedCount === 0 || isProcessing}
+          className="h-10 rounded-md bg-brand-purple text-xs font-bold text-brand-text-main transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-brand-text-muted"
+        >
+          Export ZIP
+        </button>
+        <button
+          type="button"
+          onClick={onReprocess}
+          disabled={completedCount === 0 || isProcessing}
+          className="h-10 rounded-md border border-brand-purple/25 text-xs font-semibold text-brand-text-main transition hover:border-brand-pink disabled:cursor-not-allowed disabled:text-zinc-700"
+        >
+          Reprocess
+        </button>
       </div>
 
       <section aria-label="Selected logo controls" className="mt-4 rounded border border-brand-orange/30 bg-black p-3">
@@ -143,13 +160,13 @@ export function SettingsPanel({
 
       <fieldset className="mt-4">
         <legend className="text-xs font-medium text-brand-text-main">Color normalization</legend>
-        <div className="mt-2 grid grid-cols-4 gap-1.5">
+        <div className="mt-2 grid grid-cols-[repeat(3,minmax(0,1fr))_minmax(5.75rem,1.25fr)] gap-1.5">
           {normalizationModes.map((mode) => (
             <button
               key={mode.value}
               type="button"
               onClick={() => onSettingsChange({ normalizationMode: mode.value })}
-              className={`h-8 rounded border px-1 text-[11px] font-medium transition ${
+              className={`h-8 whitespace-nowrap rounded border px-1 text-[11px] font-medium transition ${
                 settings.normalizationMode === mode.value
                   ? "border-brand-purple bg-brand-purple text-brand-text-main"
                   : "border-brand-purple/25 bg-black text-brand-text-muted hover:border-brand-pink hover:text-brand-text-main"
@@ -181,32 +198,6 @@ export function SettingsPanel({
         </div>
       </fieldset>
 
-      <button
-        type="button"
-        onClick={onReset}
-        className="mt-3 h-8 w-full rounded-md text-xs font-semibold text-brand-text-muted transition hover:text-brand-text-main"
-      >
-        Clear workspace
-      </button>
-
-      <div className="mt-4 grid grid-cols-2 gap-2 border-t border-brand-purple/20 pt-4">
-        <button
-          type="button"
-          onClick={onExport}
-          disabled={completedCount === 0 || isProcessing}
-          className="h-10 rounded-md bg-brand-purple text-xs font-bold text-brand-text-main transition hover:bg-brand-pink disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-brand-text-muted"
-        >
-          Export ZIP
-        </button>
-        <button
-          type="button"
-          onClick={onReprocess}
-          disabled={completedCount === 0 || isProcessing}
-          className="h-10 rounded-md border border-brand-purple/25 text-xs font-semibold text-brand-text-main transition hover:border-brand-pink disabled:cursor-not-allowed disabled:text-zinc-700"
-        >
-          Reprocess
-        </button>
-      </div>
     </aside>
   );
 }
