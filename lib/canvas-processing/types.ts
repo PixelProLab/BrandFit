@@ -8,7 +8,33 @@
 
 export type ColorNormalizationMode = "original" | "black" | "white" | "grayscale";
 
+/**
+ * MCP-facing color mode enum. Kept as a separate alias so generated JSON
+ * schemas can use the domain term while the existing browser UI keeps its
+ * historical `ColorNormalizationMode` name.
+ */
+export type ColorMode = ColorNormalizationMode;
+
 export type LogoExportFormat = "webp" | "png" | "svg";
+
+/**
+ * Padding contract used by both the browser app and future MCP server tools.
+ * Ratio padding is serializable, resolution-independent, and easy for an AI
+ * agent to reason about: `0.16` means 16% on each side of the output box.
+ */
+export type TargetPadding = {
+  ratio: number;
+};
+
+/**
+ * Output grid constraints for a single standardized asset. The browser app
+ * currently uses square outputs, but MCP tools can pass rectangular constraints
+ * without changing the optical-balance math.
+ */
+export type GridConstraints = {
+  outputWidth: number;
+  outputHeight: number;
+};
 
 export type LogoSourceFile = {
   id: string;
@@ -71,6 +97,17 @@ export type LogoOutputSettings = {
    */
   manualScale: number;
   webpQuality?: number;
+};
+
+/**
+ * MCP-friendly exported asset. Unlike browser downloads, this can be returned
+ * directly in a tool response as JSON without requiring a ZIP file.
+ */
+export type EncodedLogoAsset = {
+  fileName: string;
+  mimeType: string;
+  encoding: "base64" | "utf8";
+  content: string;
 };
 
 export type ProcessedLogo = {

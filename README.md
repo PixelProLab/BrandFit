@@ -51,8 +51,18 @@ This zero-server architecture makes BrandFit by Pixel Pro Lab safe for processin
 BrandFit by Pixel Pro Lab is structured so developers can contribute to specific modules without interfering with the core logic.
 
 - `/components/ui`: Presentational elements. Contains no canvas math or image-processing algorithms.
-- `/lib/canvas-processing`: The core engine. Owns trimming, density measurement, and browser-side file generation. *Note: Complex math functions here are explicitly commented to explain the "why," not just the "how."*
+- `/lib/canvas-processing`: The core engine. Owns trimming, density measurement, color normalization, optical placement, and browser-side file generation. *Note: Complex math functions here are explicitly commented to explain the "why," not just the "how."*
 - `/store`: State management. Tracks uploaded assets, processing results, and UI selections independent of the rendering layer.
+
+## MCP & AI Agent Readiness
+
+The optical balancing math is intentionally isolated in `/lib/canvas-processing/engine.ts`.
+
+- `processImage()` accepts plain RGBA buffers and serializable settings, not React components, DOM nodes, Canvas elements, or browser `Blob` objects.
+- Shared contracts such as `TargetPadding`, `ColorMode`, `GridConstraints`, and `EncodedLogoAsset` live in `/lib/canvas-processing/types.ts`.
+- Browser adapters in `/lib/canvas-processing/index.ts` handle Canvas, file reading, ZIP creation, PNG/WebP/SVG wrapper output, and conversion to base64 or raw SVG text.
+
+This split lets a future MCP server reuse the same BrandFit math with a Node image adapter such as `sharp` or `canvas`, while returning raw base64 assets or SVG markup directly to an AI agent.
 
 ## Local Development
 

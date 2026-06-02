@@ -1,15 +1,36 @@
 export type {
   ColorNormalizationMode,
+  ColorMode,
+  EncodedLogoAsset,
+  GridConstraints,
   LogoExportFormat,
   LogoOutputSettings,
   LogoSourceFile,
   OpticalBalanceMetrics,
   ProcessedLogo,
+  TargetPadding,
   TrimmedLogoBounds,
 } from "./types";
+export type {
+  BrandFitProcessImageInput,
+  BrandFitProcessImageResult,
+  BrandFitProcessingSettings,
+  LogoPlacementPlan,
+  ResolvedBrandFitSettings,
+  RgbaPixelBuffer,
+} from "./engine";
+export {
+  calculateLogoPlacement,
+  computeOpticalScale,
+  cropRgbaToBounds,
+  findTransparentTrimBounds as findTransparentTrimBoundsFromRgba,
+  normalizeRgbaColor,
+  processImage,
+} from "./engine";
 
 import type {
   ColorNormalizationMode,
+  EncodedLogoAsset,
   LogoExportFormat,
   LogoOutputSettings,
   LogoSourceFile,
@@ -17,6 +38,14 @@ import type {
   ProcessedLogo,
   TrimmedLogoBounds,
 } from "./types";
+import {
+  computeOpticalDensityMetrics as computeEngineOpticalDensityMetrics,
+  findTransparentTrimBounds as findEngineTransparentTrimBounds,
+  normalizeRgbaColor,
+  normalizeTrimBounds as normalizeEngineTrimBounds,
+  processImage,
+  type RgbaPixelBuffer,
+} from "./engine";
 
 const DEFAULT_ALPHA_THRESHOLD = 8;
 const DEFAULT_OUTPUT_SIZE = 512;
@@ -112,51 +141,14 @@ export const drawImageToCanvas = (
 export const findTransparentTrimBounds = (
   imageData: ImageData,
   alphaThreshold = DEFAULT_ALPHA_THRESHOLD,
-): TrimmedLogoBounds | null => {
-  const { data, width, height } = imageData;
-  let top = height;
-  let right = -1;
-  let bottom = -1;
-  let left = width;
-
-  for (let y = 0; y < height; y += 1) {
-    for (let x = 0; x < width; x += 1) {
-      const alpha = data[(y * width + x) * 4 + 3];
-
-      if (alpha <= alphaThreshold) {
-        continue;
-      }
-
-      top = Math.min(top, y);
-      right = Math.max(right, x);
-      bottom = Math.max(bottom, y);
-      left = Math.min(left, x);
-    }
-  }
-
-  if (right < left || bottom < top) {
-    return null;
-  }
-
-  return makeBounds(left, top, right, bottom);
-};
+): TrimmedLogoBounds | null =>
+  findEngineTransparentTrimBounds(imageDataToRgbaPixelBuffer(imageData), alphaThreshold);
 
 export const normalizeTrimBounds = (
   bounds: TrimmedLogoBounds | null,
   sourceWidth: number,
   sourceHeight: number,
-): TrimmedLogoBounds => {
-  if (!bounds) {
-    return makeBounds(0, 0, sourceWidth - 1, sourceHeight - 1);
-  }
-
-  const left = clamp(Math.floor(bounds.left), 0, sourceWidth - 1);
-  const top = clamp(Math.floor(bounds.top), 0, sourceHeight - 1);
-  const right = clamp(Math.ceil(bounds.right), left, sourceWidth - 1);
-  const bottom = clamp(Math.ceil(bounds.bottom), top, sourceHeight - 1);
-
-  return makeBounds(left, top, right, bottom);
-};
+): TrimmedLogoBounds => normalizeEngineTrimBounds(bounds, sourceWidth, sourceHeight);
 
 export const cropImageDataToBounds = (imageData: ImageData, bounds: TrimmedLogoBounds): ImageData => {
   const normalizedBounds = normalizeTrimBounds(bounds, imageData.width, imageData.height);
@@ -180,47 +172,12 @@ export const computeOpticalDensityMetrics = (
   imageData: ImageData,
   bounds: TrimmedLogoBounds = makeBounds(0, 0, imageData.width - 1, imageData.height - 1),
   alphaThreshold = DEFAULT_ALPHA_THRESHOLD,
-): OpticalBalanceMetrics => {
-  const normalizedBounds = normalizeTrimBounds(bounds, imageData.width, imageData.height);
-  const { data, width } = imageData;
-  let visiblePixels = 0;
-  let alphaSum = 0;
-  let weightedX = 0;
-  let weightedY = 0;
-
-  for (let y = normalizedBounds.top; y <= normalizedBounds.bottom; y += 1) {
-    for (let x = normalizedBounds.left; x <= normalizedBounds.right; x += 1) {
-      const alpha = data[(y * width + x) * 4 + 3];
-
-      if (alpha <= alphaThreshold) {
-        continue;
-      }
-
-      visiblePixels += 1;
-      alphaSum += alpha;
-      weightedX += x * alpha;
-      weightedY += y * alpha;
-    }
-  }
-
-  const boxArea = normalizedBounds.width * normalizedBounds.height;
-  const visiblePixelRatio = boxArea > 0 ? visiblePixels / boxArea : 0;
-  const alphaDensity = boxArea > 0 ? alphaSum / (boxArea * 255) : 0;
-  const centerX = normalizedBounds.left + (normalizedBounds.width - 1) / 2;
-  const centerY = normalizedBounds.top + (normalizedBounds.height - 1) / 2;
-  const visualX = alphaSum > 0 ? weightedX / alphaSum : centerX;
-  const visualY = alphaSum > 0 ? weightedY / alphaSum : centerY;
-
-  return {
-    visiblePixelRatio,
-    visualCenterOffset: {
-      x: normalizedBounds.width > 0 ? (visualX - centerX) / normalizedBounds.width : 0,
-      y: normalizedBounds.height > 0 ? (visualY - centerY) / normalizedBounds.height : 0,
-    },
-    alphaDensity,
-    opticalScale: computeOpticalScale(visiblePixelRatio, alphaDensity),
-  };
-};
+): OpticalBalanceMetrics =>
+  computeEngineOpticalDensityMetrics(
+    imageDataToRgbaPixelBuffer(imageData),
+    bounds,
+    alphaThreshold,
+  );
 
 export const fitLogoIntoSquareOutput = (
   imageData: ImageData,
@@ -230,53 +187,26 @@ export const fitLogoIntoSquareOutput = (
   } = {},
 ): FittedLogoCanvas => {
   const outputSize = options.outputSize ?? DEFAULT_OUTPUT_SIZE;
-  const paddingRatio = clamp(options.paddingRatio ?? DEFAULT_PADDING_RATIO, 0, 0.45);
-  const trimBounds = normalizeTrimBounds(
-    options.trimBounds ?? findTransparentTrimBounds(imageData, options.alphaThreshold),
-    imageData.width,
-    imageData.height,
-  );
-  const croppedData = cropImageDataToBounds(imageData, trimBounds);
-  const normalizedData = normalizeImageDataColor(
-    croppedData,
-    options.normalizationMode ?? "original",
-  );
-  const metrics = computeOpticalDensityMetrics(imageData, trimBounds, options.alphaThreshold);
+  const result = processImage({
+    image: imageDataToRgbaPixelBuffer(imageData),
+    settings: {
+      grid: {
+        outputWidth: outputSize,
+        outputHeight: outputSize,
+      },
+      targetPadding: {
+        ratio: options.paddingRatio ?? DEFAULT_PADDING_RATIO,
+      },
+      colorMode: options.normalizationMode ?? "original",
+      manualScale: options.manualScale ?? DEFAULT_MANUAL_SCALE,
+      alphaThreshold: options.alphaThreshold,
+      trimBounds: options.trimBounds,
+    },
+  });
   const canvas = createCanvas(outputSize, outputSize);
   const context = get2dContext(canvas);
-  const sourceCanvas = imageDataToCanvas(normalizedData);
-  const drawableSize = outputSize * (1 - paddingRatio * 2);
-  const geometricScale = Math.min(
-    drawableSize / trimBounds.width,
-    drawableSize / trimBounds.height,
-  );
-  const manualScale = clamp(options.manualScale ?? DEFAULT_MANUAL_SCALE, 0.65, 1.4);
-
-  /*
-   * WHY manual scale is multiplied last:
-   * The pipeline first finds the maximum safe geometric fit, then applies the
-   * automatic density correction. The reviewer adjustment is intentionally the
-   * final multiplier so "make this logo 8% bigger" means 8% bigger than
-   * BrandFit by Pixel Pro Lab's recommended output, not 8% bigger than the raw source bounds.
-   */
-  const scale = geometricScale * metrics.opticalScale * manualScale;
-  const width = trimBounds.width * scale;
-  const height = trimBounds.height * scale;
-
-  /*
-   * WHY this centers better than raw bounds:
-   * Transparent trim gives us the smallest geometric rectangle, but logos are
-   * often lopsided: a registered mark, long descender, or dense icon can pull
-   * the eye away from the rectangle's center. The alpha-weighted centroid finds
-   * where the visible pixels actually carry mass. Moving the destination in the
-   * opposite direction recenters that mass while keeping all math scale-invariant.
-  */
-  const balanceStrength = 0.55;
-  const balancedX = (outputSize - width) / 2 - metrics.visualCenterOffset.x * width * balanceStrength;
-  const balancedY =
-    (outputSize - height) / 2 - metrics.visualCenterOffset.y * height * balanceStrength;
-  const x = clamp(balancedX, 0, outputSize - width);
-  const y = clamp(balancedY, 0, outputSize - height);
+  const sourceCanvas = imageDataToCanvas(rgbaPixelBufferToImageData(result.normalizedTrimmedImage));
+  const { x, y, width, height, scale } = result.placement;
 
   context.clearRect(0, 0, outputSize, outputSize);
   context.imageSmoothingEnabled = true;
@@ -286,57 +216,14 @@ export const fitLogoIntoSquareOutput = (
   return {
     canvas,
     fit: { x, y, width, height, scale },
-    metrics,
+    metrics: result.balanceMetrics,
   };
 };
 
 export const normalizeImageDataColor = (
   imageData: ImageData,
   mode: ColorNormalizationMode,
-): ImageData => {
-  if (mode === "original") {
-    return new ImageData(new Uint8ClampedArray(imageData.data), imageData.width, imageData.height);
-  }
-
-  const normalized = new ImageData(
-    new Uint8ClampedArray(imageData.data),
-    imageData.width,
-    imageData.height,
-  );
-
-  for (let index = 0; index < normalized.data.length; index += 4) {
-    const alpha = normalized.data[index + 3];
-
-    if (alpha === 0) {
-      continue;
-    }
-
-    if (mode === "black" || mode === "white") {
-      const channel = mode === "black" ? 0 : 255;
-      normalized.data[index] = channel;
-      normalized.data[index + 1] = channel;
-      normalized.data[index + 2] = channel;
-      continue;
-    }
-
-    /*
-     * WHY these weights:
-     * sRGB green contributes the most perceived brightness and blue the least.
-     * Using the Rec. 709 luma coefficients keeps grayscale marks visually close
-     * to their original contrast instead of averaging channels equally.
-     */
-    const gray = Math.round(
-      normalized.data[index] * 0.2126 +
-        normalized.data[index + 1] * 0.7152 +
-        normalized.data[index + 2] * 0.0722,
-    );
-    normalized.data[index] = gray;
-    normalized.data[index + 1] = gray;
-    normalized.data[index + 2] = gray;
-  }
-
-  return normalized;
-};
+): ImageData => rgbaPixelBufferToImageData(normalizeRgbaColor(imageDataToRgbaPixelBuffer(imageData), mode));
 
 export const canvasToWebPBlob = (
   canvas: HTMLCanvasElement,
@@ -370,24 +257,91 @@ export const canvasToPngBlob = (canvas: HTMLCanvasElement): Promise<Blob> =>
   });
 
 export const canvasToEmbeddedSvgBlob = (canvas: HTMLCanvasElement): Blob => {
-  const size = canvas.width;
+  const svg = canvasToEmbeddedSvgMarkup(canvas);
+
+  return new Blob([svg], { type: "image/svg+xml" });
+};
+
+export const canvasToEmbeddedSvgMarkup = (canvas: HTMLCanvasElement): string => {
   const dataUrl = canvas.toDataURL("image/png");
+  const imageBase64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
+
+  return createEmbeddedSvgMarkup({
+    imageBase64,
+    imageMimeType: "image/png",
+    width: canvas.width,
+    height: canvas.height,
+  });
+};
+
+export const createEmbeddedSvgMarkup = ({
+  imageBase64,
+  imageMimeType,
+  width,
+  height,
+}: {
+  imageBase64: string;
+  imageMimeType: string;
+  width: number;
+  height: number;
+}): string => {
+  assertPositiveInteger(width, "width");
+  assertPositiveInteger(height, "height");
 
   /*
    * WHY this is an SVG export instead of vector tracing:
    * Most uploaded sponsor files are raster screenshots, PNGs, or flattened
    * artwork. Automatic vector tracing would invent paths, lose brand detail,
    * and imply a precision we cannot guarantee in a privacy-first release. Wrapping
-   * the processed canvas in an SVG preserves the standardized square viewBox
-   * and layout behavior while keeping the logo pixels faithful to the source.
+   * the processed image in an SVG preserves the standardized viewBox and layout
+   * behavior while keeping the logo pixels faithful to the source.
    */
-  const svg = [
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img">`,
-    `<image href="${dataUrl}" width="${size}" height="${size}" preserveAspectRatio="xMidYMid meet" />`,
+  const dataUrl = `data:${imageMimeType};base64,${imageBase64}`;
+
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img">`,
+    `<image href="${dataUrl}" width="${width}" height="${height}" preserveAspectRatio="xMidYMid meet" />`,
     "</svg>",
   ].join("");
+};
 
-  return new Blob([svg], { type: "image/svg+xml" });
+export const blobToBase64 = async (blob: Blob): Promise<string> => {
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+
+  return bytesToBase64(bytes);
+};
+
+export const bytesToBase64 = (bytes: Uint8Array): string => {
+  if (typeof Buffer !== "undefined") {
+    return Buffer.from(bytes).toString("base64");
+  }
+
+  let binary = "";
+  for (const byte of bytes) {
+    binary += String.fromCharCode(byte);
+  }
+
+  return btoa(binary);
+};
+
+export const processedLogoOutputToEncodedAsset = async (
+  logo: ProcessedLogoOutput,
+): Promise<EncodedLogoAsset> => {
+  if (logo.exportFormat === "svg") {
+    return {
+      fileName: logo.fileName,
+      mimeType: "image/svg+xml",
+      encoding: "utf8",
+      content: await logo.blob.text(),
+    };
+  }
+
+  return {
+    fileName: logo.fileName,
+    mimeType: logo.blob.type || `image/${logo.exportFormat}`,
+    encoding: "base64",
+    content: await blobToBase64(logo.blob),
+  };
 };
 
 export const processLogoFile = async (
@@ -480,6 +434,21 @@ const imageDataToCanvas = (imageData: ImageData): HTMLCanvasElement => {
   return canvas;
 };
 
+const imageDataToRgbaPixelBuffer = (imageData: ImageData): RgbaPixelBuffer => ({
+  width: imageData.width,
+  height: imageData.height,
+  /*
+   * Copy the backing store before it enters the headless engine. Browser
+   * ImageData is mutable and may be reused by Canvas code, while MCP adapters
+   * will pass their own typed arrays. Copying here keeps the portable engine
+   * deterministic and prevents UI-side mutations from leaking across calls.
+   */
+  data: new Uint8ClampedArray(imageData.data),
+});
+
+const rgbaPixelBufferToImageData = (image: RgbaPixelBuffer): ImageData =>
+  new ImageData(new Uint8ClampedArray(image.data), image.width, image.height);
+
 const get2dContext = (canvas: HTMLCanvasElement): CanvasRenderingContext2D => {
   const context = canvas.getContext("2d", { willReadFrequently: true });
 
@@ -488,19 +457,6 @@ const get2dContext = (canvas: HTMLCanvasElement): CanvasRenderingContext2D => {
   }
 
   return context;
-};
-
-const computeOpticalScale = (visiblePixelRatio: number, alphaDensity: number): number => {
-  /*
-   * WHY this heuristic works for the first release:
-   * Designers judge logo size by ink density, not by bounding boxes. A sparse
-   * wordmark inside a wide trim box looks smaller than a filled app icon at the
-   * same geometric size, so we gently enlarge sparse marks and slightly reduce
-   * dense marks. The clamp keeps the correction subtle enough to avoid clipping.
-   */
-  const densitySignal = (visiblePixelRatio + alphaDensity) / 2;
-
-  return clamp(1.1 - densitySignal * 0.28, 0.9, 1.08);
 };
 
 const makeBounds = (left: number, top: number, right: number, bottom: number): TrimmedLogoBounds => ({
